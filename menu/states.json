@@ -1,0 +1,22 @@
+{
+  "report-template": {
+    "url": "/report-template",
+    "templateUrl": "html/Report Template.html"
+  },
+  "blank-template": {
+    "url": "/blank-template",
+    "templateUrl": "html/Blank Template.html"
+  },
+  "simple-page": {
+    "url": "/simple-page",
+    "templateUrl": "html/Simple Page.html"
+  },
+  "dashboard-template": {
+    "url": "/dashboard-template",
+    "templateUrl": "html/Dashboard Template.html"
+  },
+  "test": {
+    "url": "/test",
+    "templateUrl": "html/test.html"
+  }
+}

@@ -1,0 +1,31 @@
+[
+	{
+		"id": "P&L",
+		"mdx": [
+      "SELECT NON EMPTY {[Period].[Oct], [Period].[Oct YTD], [Period].[Year]} * {[Version].[Actual], [Version].[Budget]} ON COLUMNS,",
+      "NON EMPTY {TM1SubsetToSet([Account], \"Net Income\")} * {[Department].AllMembers} ON ROWS",
+      "FROM [General Ledger]",
+      "WHERE ([Year].&[{{Year}}], [Region].&[{{Region}}], [General Ledger Measure].&[Amount], [Currency].&[Local])" 
+    ],
+		"description":"",
+		"mdxParams": [
+			{ "name":"Year", "value":"2012" },
+			{ "name":"Region", "value":"3" }
+		]
+	},
+	{
+    "id": "Data Entry",
+    "mdx": [
+      "SELECT {[Period].[Year], [Period].[Jan], [Period].[Feb], [Period].[Mar], [Period].[Apr], [Period].[May], [Period].[Jun], [Period].[Jul], [Period].[Aug], [Period].[Sep], [Period].[Oct], [Period].[Nov], [Period].[Dec]} ON COLUMNS,",
+      "NON EMPTY {TM1DRILLDOWNMEMBER( {[Account].[Net Income]}, ALL, RECURSIVE )} ON ROWS",
+      "FROM [General Ledger]",
+      "WHERE ([Year].&[{{Year}}], [Region].&[{{Region}}], [General Ledger Measure].&[Amount], [Currency].&[Local], [Version].&[Budget], [Department].&[{{Department}}])" 
+    ],
+    "description":"",
+    "mdxParams": [
+      { "name":"Year", "value":"2012" },
+      { "name":"Region", "value":"3" },
+      { "name":"Department", "value":"2" }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "id": "example",
+  "name": "Example",
+  "reports": [
+    {
+      "name": "Print Sample",
+      "url": "http://localhost:8080/appbase/#/sample/print",
+      "orientation": "LANDSCAPE",
+      "pageSize": "A4",
+      "credentials": [
+        {
+          "encryptedCredentials": "Basic YWRtaW46"
+        }
+      ]
+    }
+  ],
+  "triggers": [
+    {
+      "id": "DSASKJHSDKHSA",
+      "cron": "0 0/5 * * * ?"
+    }
+  ],
+  "to": "addyouremailaddress@company.com",
+  "subject": "This is a Test Email!",
+  "body": "Add an email body here..."
+}

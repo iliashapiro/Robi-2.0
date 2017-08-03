@@ -1,0 +1,176 @@
+{
+    "setup": {
+        "url": "/setup",
+        "templateUrl": "html/samples/setup.html"
+    },
+    
+    "component": {
+        "url": "/sample/components",
+        "templateUrl": "html/samples/component.html"
+    },
+    
+    "subnm": {
+        "url": "/sample/component/subnm",
+        "templateUrl": "html/samples/components/subnm.html"
+    },
+    
+    "store": {
+        "url": "/sample/component/store",
+        "templateUrl": "html/samples/components/store.html"
+    },
+    
+    "dbr": {
+        "url": "/sample/component/dbr",
+        "templateUrl": "html/samples/components/dbr.html"
+    },
+    
+    "dbra": {
+        "url": "/sample/component/dbra",
+        "templateUrl": "html/samples/components/dbra.html"
+    },
+    
+    "activeform": {
+        "url": "/sample/component/activeform",
+        "templateUrl": "html/samples/components/activeform.html"
+    },
+    
+    "process": {
+        "url": "/sample/component/process",
+        "templateUrl": "html/samples/components/process.html"
+    },
+    
+    "tm1web": {
+        "url": "/sample/component/tm1web",
+        "templateUrl": "html/samples/components/tm1web.html"
+    },
+    
+    "mdx-chart": {
+        "url": "/sample/component/mdx-chart",
+        "templateUrl": "html/samples/components/mdx-chart.html"
+    },
+    
+    "element-list": {
+        "url": "/sample/component/element-list",
+        "templateUrl": "html/samples/components/element-list.html"
+    },
+    
+    "charts": {
+        "url": "/sample/component/charts",
+        "templateUrl": "html/samples/components/chart.html"
+    },
+    
+    "upload": {
+        "url": "/sample/component/upload",
+        "templateUrl": "html/samples/components/upload.html"
+    }, 
+    
+    "mdx-table": {
+        "url": "/sample/component/mdx-table",
+        "templateUrl": "html/samples/components/mdx-table.html"
+    },   
+    
+    "sample": {
+        "url": "/samples",
+        "templateUrl": "html/samples/sample.html"
+    },
+    
+    "sample1": {
+        "url": "/sample/sample1",
+        "templateUrl": "html/samples/sample-simple.html"
+    },
+    
+    "sample2": {
+        "url": "/sample/sample2",
+        "templateUrl": "html/samples/sample-skinning.html"
+    },
+    
+    "sample3": {
+        "url": "/sample/sample3",
+        "templateUrl": "html/samples/sample-dashboard.html"
+    },
+    
+    "sample4": {
+        "url": "/sample/sample4",
+        "templateUrl": "html/samples/sample-navigation-1.html"
+    },
+    
+    "sample5": {
+        "url": "/sample/sample5/:region",
+        "templateUrl": "html/samples/sample-navigation-2.html"
+    },
+    
+    "sample6": {
+        "url": "/sample/sample6",
+        "templateUrl": "html/samples/sample-data-entry.html"
+    },
+    
+    "sample7": {
+        "url": "/sample/sample7",
+        "templateUrl": "html/samples/sample-salary-budget.html"
+    },
+    
+    "sample7d": {
+        "url": "/sample/sample7d/:region/:dept",
+        "templateUrl": "html/samples/sample-salary-budget.html"
+    },
+    
+    "sample8": {
+        "url": "/sample/sample8",
+        "templateUrl": "html/samples/sample-advance-chart.html"
+    },
+    
+    "sample9": {
+        "url": "/sample/sample9",
+        "templateUrl": "html/samples/sample-upload.html"
+    },
+    
+    "mdx-named": {
+        "url": "/sample/mdx-named",
+        "templateUrl": "html/samples/sample-mdx-named.html"
+    },
+    
+    "sample-table": {
+        "url": "/sample/sample-table",
+        "templateUrl": "html/samples/sample-table.html"
+    },
+    
+    "print": {
+        "url": "/sample/print",
+        "templateUrl": "html/samples/sample-print.html"
+    },
+    
+    "sample-cubes": {
+        "url": "/sample/sample-cubes",
+        "templateUrl": "html/samples/cubes.html"
+    },
+    
+    "temp": {
+        "url": "/sample/temp",
+        "templateUrl": "html/samples/temp.html"
+    }, 
+    
+    "templates": {
+        "url": "/sample/templates",
+        "templateUrl": "html/samples/templates.html"
+    },
+    
+    "template-dashboard": {
+        "url": "/sample/templates/template-dashboard",
+        "templateUrl": "html/samples/templates/dashboard.html"
+    },
+    
+    "sample-sql": {
+        "url": "/sample/sample-sql",
+        "templateUrl": "html/samples/sample-sql.html"
+    },
+    
+    "sample-performance": {
+        "url": "/sample/sample-performance",
+        "templateUrl": "html/samples/performance.html"
+    }, 
+    
+    "sample-grid": {
+        "url": "/sample/sample-grid",
+        "templateUrl": "html/samples/sample-grid.html"
+    }   
+}

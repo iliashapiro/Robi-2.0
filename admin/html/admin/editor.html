@@ -1,0 +1,23 @@
+<div ng-controller="EditorCtrl">
+  
+  <div class="row">
+    <div class="col-md-4">
+      <select class="form-control" ng-model="page.fileName" ng-change="selected()">
+        <option ng-repeat="item in page.files">{{item}}</option>
+      </select>     
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-primary" style="width: 130px;" translate="SAVE" ng-click="save();" ng-disabled="!page.file || saving"></button>
+      <a href="#/page-creator" class="btn btn-success" style="width: 130px;" translate="NEW" ></a> 
+      <span class="panel panel-success" ng-if="saved"><span class="panel-heading" translate="SAVED" ></span></span>
+      <span class="panel panel-danger" ng-if="message"><span class="panel-heading" >{{message}}</span></span>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12">
+      <pre ui-ace="{ onLoad : aceLoaded }" style="height: 600px; font-size: 1.1em;" ></pre>
+    </div>
+  </div>
+  
+</div>

@@ -1,0 +1,249 @@
+<div ng-controller="AdminSettingCtrl">
+  
+  <h1><i class="fa fa-paint-brush"></i> <span translate="SETTINGS"></span></h1>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span translate="APPLICATIONNAME"></span>
+        </div>
+        <div class="panel-body">
+        
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="APPLICATIONLABEL"></label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="{{'APPLICATIONLABEL' | translate}}" ng-model="appSettings.applicationName">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SHOWSYSTEMMENU"></label>
+              <div class="col-sm-6">
+                <input type="checkbox" ng-model="appSettings.showSystemMenu">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SHOWSYSTEMMENUSIDEBAR"></label>
+              <div class="col-sm-6">
+                <input type="checkbox" ng-model="appSettings.showSideBar">
+              </div>
+            </div>
+            
+            <!-- Removed for now; User can directly just edit the navigation.body.custom.ftl file -->
+            <!--
+            <div class="form-group">
+              <label class="col-sm-4 control-label" translate="USECUSTOMNAVIGATION"></label>
+              <div class="col-sm-8">
+                <input type="checkbox" ng-model="appSettings.useCustomNavigation">
+              </div>
+            </div>
+            -->
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SETCANVASTHEME"></label>
+              <div class="col-sm-6">
+                <select class="form-control" ng-model="appSettings.theme">
+                  <option ng-repeat="theme in appSettings.themes" value="{{theme}}">{{theme}}</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SETCANVASADMINTHEME"></label>
+              <div class="col-sm-6">
+                <select class="form-control" ng-model="appSettings.adminTheme">
+                  <option ng-repeat="theme in appSettings.themes" value="{{theme}}">{{theme}}</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SETEDITORTHEME"></label>
+              <div class="col-sm-6">
+                <select class="form-control" ng-model="appSettings.editorTheme">
+                  <option ng-repeat="theme in appSettings.editorThemes" value="{{theme}}">{{theme}}</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="APPLICATIONCACHEREFRESH"></label>
+              <div class="col-sm-6">
+                <input type="number" class="form-control" placeholder="{{'APPLICATIONCACHEREFRESH' | translate}}" ng-model="appSettings.cacheTimeLapseInMinutes">
+              </div>
+            </div>
+            
+            <div class="form-group" ng-class="{'has-error':!appSettings.fileUploadDirRelativePath.length}">
+              <label class="col-sm-6 control-label" translate="APPLICATIONFILEUPLOADDIR"></label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="{{'APPLICATIONFILEUPLOADDIR' | translate}}" ng-model="appSettings.fileUploadDirRelativePath">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="ALWAYSDELETECELLSET"></label>
+              <div class="col-sm-6">
+                <input type="checkbox" ng-model="appSettings.deleteCellsets">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="ENABLESECURITYCHECK"></label>
+              <div class="col-sm-6">
+                <input type="checkbox" ng-model="appSettings.enableSecurityCheck">
+              </div>
+            </div>
+            
+          </form>
+          
+          <!-- Button -->
+          <hr />
+          <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+              <button type="button" class="pull-right btn btn-primary" style="width: 250px;" ng-click="saveSettings('saveSettings')" translate="SAVE"></button>
+            </div>
+          </div>
+          
+                
+          <!-- Message -->
+          <div class="form-group" ng-if="saveSettings.message.length > 0">
+            <div class="col-sm-12">
+              <br />
+                <div class="alert" ng-class="{'alert-success':saveSettings.success, 'alert-danger':!saveSettings.success}" role="alert">{{saveSettings.message}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span translate="PASSWORDCHANGE"></span>
+        </div>
+        <div class="panel-body">
+          <form id="formUpdate" class="form-horizontal" ng-class="{'has-error':!savePassword.success && savePassword.message.length > 0}">
+            <div class="form-group">
+              <label for="inputCurrentPassword" class="col-sm-6 control-label" translate="PASSWORDCURRENT"></label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control" id="inputCurrentPassword" ng-change="onPasswordUpdate()" ng-model="admin.password.current" placeholder="{{'PASSWORDCURRENT' | translate}}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewPassword" class="col-sm-6 control-label" translate="PASSWORDNEW"></label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control" id="inputNewPassword" ng-change="onPasswordUpdate()" ng-model="admin.password.confirm1" placeholder="{{'PASSWORDNEW' | translate}}">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputNewPassword2" class="col-sm-6 control-label" translate="PASSWORDNEWCONFIRM"></label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control" id="inputNewPassword2" ng-change="onPasswordUpdate()" ng-model="admin.password.confirm2" placeholder="{{'PASSWORDNEWCONFIRM' | translate}}">
+              </div>              
+            </div>  
+          </form>
+          
+          <!-- Button -->
+          <hr/>          
+          <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+              <button type="button" class="pull-right btn btn-primary" style="width: 250px;" ng-click="updateAdminPassword()" translate="PASSWORDUPDATE"></button>
+            </div>
+          </div>
+          
+          <!-- Message -->
+          <div class="form-group" ng-if="savePassword.message.length > 0">
+            <div class="col-sm-12">
+              <br />
+              <div class="alert" ng-class="{'alert-success':savePassword.success, 'alert-danger':!savePassword.success}" role="alert">{{savePassword.message}}</div>
+            </div>
+          </div>
+            
+        </div>
+      </div>
+      
+      
+      
+      
+      
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <span translate="SMTPCONFIGURATION"></span>
+        </div>
+        <div class="panel-body">
+        
+          <form class="form-horizontal">            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SMTPSERVER"></label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="{{'SMTPSERVER' | translate}}" ng-model="appSettings.smtpServer">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SMTPEMAILFROM"></label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="{{'SMTPEMAILFROM' | translate}}" ng-model="appSettings.smtpEmailFrom">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SMTPUSERNAME"></label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="{{'SMTPUSERNAME' | translate}}" ng-model="appSettings.smtpUser">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SMTPPASSWORD"></label>
+              <div class="col-sm-6">
+                <input type="password" class="form-control" placeholder="{{'SMTPPASSWORD' | translate}}" ng-model="appSettings.smtpPassword">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SMTPUSESSL"></label>
+              <div class="col-sm-6">
+                <input type="checkbox" ng-change="updateSMTPPort(appSettings)" ng-model="appSettings.smtpSSL">
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="col-sm-6 control-label" translate="SMTPPORT"></label>
+              <div class="col-sm-6">
+                <input type="number" class="form-control" placeholder="{{'SMTPPORT' | translate}}" ng-model="appSettings.smtpPort">
+              </div>
+            </div>
+            
+          </form>
+          
+          <!-- Button -->
+          <hr />
+          <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+              <button type="button" class="pull-right btn btn-primary" style="width: 250px;" ng-click="saveSettings('saveSMPTSettings')" translate="SAVE"></button>
+            </div>
+          </div>
+          
+                
+          <!-- Message -->
+          <div class="form-group" ng-if="saveSMPTSettings.message.length > 0">
+            <div class="col-sm-12">
+              <br />
+                <div class="alert" ng-class="{'alert-success':saveSMPTSettings.success, 'alert-danger':!saveSMPTSettings.success}" role="alert">{{saveSMPTSettings.message}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      
+      
+      
+    </div>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+ <style>
+ #wrapper{
+	overflow:hidden;
+}
+body{
+	overflow:hidden;
+}
+#page-view {
+    padding: 0px;
+    padding-top: 32px;
+    padding-bottom: 5px;
+   
+}
+.fixedcontroler{
+  position:fixed; 
+  overflow:hidden;   
+  margin:0px;
+}
+ </style>
+
+ 
+<div ng-controller="SimplePageCtrl" id="fixedcontroler" class="fixedcontroler" ng-class="$root.navisopened &&  !mobileview ? 'navopen':'navclose'"   >
+
+
+ <div ng-show="false"><tm1-ui-dbra tm1-instance="dev" tm1-dimension="Department" tm1-element="{{page.title.department}}" tm1-attribute="Description" tm1-read-only="true" ng-model="mydepartment"></tm1-ui-dbra></div>
+ <div ng-show="false"><tm1-ui-dbra tm1-instance="dev" tm1-dimension="Region" tm1-element="{{page.title.region}}" tm1-attribute="Description" tm1-read-only="true" ng-model="myregion"></tm1-ui-dbra></div>
+   
+		<div id="topheader"   ng-init="findFilterStateStart();">
+		 <div class="col-xs-6 btn-group btn-group pull-left "  >
+				<h4 class="col-xs-12 title-container" >
+			 	<span  class="title-span">
+				Salary Template: {{mydepartment}} | {{myregion}} 
+			 
+				</span>
+				</h4>
+			 
+					
+			</div> 
+			 <div class="col-md-12 col-xs-12 "  > 
+     	<ul id="filtertab" class="nav nav-tabs  "  ng-init="filterOpen($root.showfilter)">
+				 	<li class="filtertab-btn pull-right" >
+								<a class="nopadding"  ng-class="$root.showfilter ? 'filteropened':'filterclosed'" ng-click="$root.showfilter = !$root.showfilter; filterOpen($root.showfilter)" data-toggle="tab" >
+									<i class="fa fa-filter" ng-if="!$root.showfilter" aria-hidden="true"></i>
+									<i class="fa fa-times" ng-if="$root.showfilter" aria-hidden="true"></i> Filter </a>
+						</li>
+				 
+					 
+					</ul> 
+				</div>
+		<hr class="filter-section-border"> 
+    </div>
+     <div id="filter-container" class="col-md-12 col-xs-12 filtercontents"  ng-show="$root.showfilter" >
+      <div class="col-md-12 nopadding"  style="padding:0px; padding-left:10px;" > 
+		 
+      
+        <div  class="col-md-4 col-xs-12 pull-left" style="padding:0px;padding-top:5px; ">
+          <tm1-ui-subnm tm1-instance="dev" tm1-dimension="Year" tm1-subset="Default" tm1-show-hierarchy="false" tm1-default-element="2016" ng-model="page.selectedyear"></tm1-ui-subnm>
+        </div>
+        
+        <div   class="col-md-4 col-xs-12" style="background-color:transparent; height:auto; padding:0px;padding-top:5px; padding-left:0px;">
+          
+          <div id="filtersubnm1" style="width:100%; background-color:transparent; height:40px; display:inline-block;  ">
+            <tm1-ui-subnm tm1-instance="dev" tm1-dimension="Department" tm1-attribute="Description" tm1-default-element="{{$root.$stateParams.dept?$root.$stateParams.dept:'6'}}" tm1-select-only="true" ng-model="page.title.department"></tm1-ui-subnm>
+            <tm1-ui-element tm1-instance="dev" tm1-dimension="Department" tm1-element="{{page.title.department}}" ng-model="page.title.departmentDetails"></tm1-ui-element>
+          </div>
+
+        </div>
+        <div   class="col-md-4 col-xs-12" style="background-color:transparent; height:auto; padding:0px;padding-top:5px; padding-left:0px;">
+
+          <div id="filtersubnm2" style="width:100%; background-color:transparent; height:40px; display:inline-block;  ">
+            <tm1-ui-subnm tm1-instance="dev" tm1-dimension="Region" tm1-attribute="Description" tm1-default-element="{{$root.$stateParams.region?$root.$stateParams.region:'3'}}" tm1-subset="Default" tm1-select-only="true" ng-model="page.title.region"></tm1-ui-subnm> 
+            <tm1-ui-element tm1-instance="dev" tm1-dimension="Region" tm1-element="{{page.title.region}}" ng-model="page.title.regionDetails"></tm1-ui-element>
+          </div>
+
+        </div>
+      
+      </div>
+    
+    </div> 
+  <div id="pagination" class="pagination" class="col-md-12 col-xs-12" style="padding:0px; margin:0px; margin-top:-8px;" >
+   <h4 class="col-md-12 col-xs-12">My Extra Panel</h4>
+ </div> 
+    <div id="fixedtable" style="overflow:auto; overflow-x:auto; width:100%; background-color: #fff; margin-top:0px;">
+      <div class="col-md-6 col-xs-12"   style="   height:auto;  padding:0px;    " > 
+          <div class="col-md-12 col-xs-12"  style="   height:auto;  padding:15px;   "> 
+          <div class="col-md-12 col-xs-12"  style=" background-color: #ccc; height:200px;  padding:10px;   "> 
+            <!--    -->
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12"   style="   height:auto;  padding:0px;    "  > 
+        <div class="col-md-12 col-xs-12"  style="   height:auto;  padding:15px;   "> 
+          <div class="col-md-12 col-xs-12"  style=" background-color: #ccc; height:200px;  padding:10px;   "> 
+            <!--    -->
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 col-xs-12" style="   height:auto;  padding:0px; "   > 
+        <div class="col-md-12 col-xs-12"  style="   height:auto;  padding:15px; "> 
+          <div class="col-md-12 col-xs-12"  style=" background-color: #ccc; height:200px;  padding:10px;   "> 
+              <!--    -->
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+</div> 

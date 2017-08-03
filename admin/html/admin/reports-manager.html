@@ -1,0 +1,55 @@
+<div ng-controller="AdminReportsManagerCtrl">
+  
+  <h1><i class="fa fa-list-alt"></i> <span translate="MENUREPORTSMANAGER"></span></h1>
+  
+  <div class="row">
+    <div class="col-md-12">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="4">
+              <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-default" ng-click="createNewJob()"><i class="fa fa-plus"></i></button>
+                  <button type="button" class="btn btn-default" ng-click="refreshJobs()"><i class="fa fa-refresh" ng-class="{'fa-spin': $root.isLoading}"></i></button>
+                </div>
+              </div>
+            </th>
+          </tr>
+          
+          <tr>
+            <th translate="NAME"></th>
+            <th translate="SCHEDULE"></th>
+            <th translate="REPORTS"></th>
+            <th>{{'ACTIONS' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="job in lists.jobs">
+            <td>{{job.name}}</td>
+            
+            <td>
+              <span ng-if="job.triggers.length > 1" translate="MULTIPLESCHEDULESFOUND"></span>
+              <span ng-if="job.triggers.length == 1">{{job.triggers[0].name}}</span>
+              <span ng-if="!(job.triggers.length >= 1)" translate="NONE"></span>
+            </td>
+            
+            <td>
+              <span ng-repeat="report in job.reports" class="label label-info tm1-ui-indent">{{report.name}}</span>
+            </td>
+            
+            <td>
+              <a ng-click="gotoJobEditor(job)"><i class="fa fa-edit tm1-ui-indent"></i></a>
+              <a ng-click="deleteJob(job)"><i class="fa fa-trash-o tm1-ui-indent"></i></a>              
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

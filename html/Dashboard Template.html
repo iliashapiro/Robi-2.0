@@ -1,0 +1,564 @@
+<style>
+#wrapper{
+	overflow:hidden;
+}
+body{
+	overflow:hidden;
+}
+#page-view {
+    padding: 0px;
+    padding-top: 32px;
+    padding-bottom: 5px;
+   
+}
+ 
+</style>
+	<!-- DASHBOARD CONTROLLER CONTAINER START-->
+<div ng-controller="DashboardTemplateCtrl" id="fixedcontroler" class="fixedcontroler" ng-class="$root.navisopened &&  !mobileview ? 'navopen':'navclose'"    >
+
+	<!-- DATA HOLDERS START-->
+	<div ng-hide="true">
+			<tm1-ui-repeat tm1-instance="dev" tm1-dimension="Department" tm1-subset="Default" ng-model="page.departments"></tm1-ui-repeat>
+			<tm1-ui-repeat tm1-instance="dev" tm1-dimension="Region" tm1-subset="Default" ng-model="page.regions"></tm1-ui-repeat>
+			<tm1-ui-repeat tm1-instance="dev" tm1-dimension="Period" tm1-subset="Test" ng-model="page.months"></tm1-ui-repeat>
+			<tm1-ui-repeat tm1-instance="dev"  tm1-dimension="Year" tm1-subset="Default" ng-model="page.years"></tm1-ui-repeat>
+
+			<tm1-ui-repeat tm1-instance="dev" tm1-dimension="Account" tm1-subset="Revenue" ng-model="page.subsetRevenue"></tm1-ui-repeat>
+			<tm1-ui-repeat tm1-instance="dev" tm1-dimension="Account" tm1-subset="Profit" ng-model="page.subsetProfit"></tm1-ui-repeat>
+			<tm1-ui-repeat tm1-instance="dev" tm1-dimension="Account" tm1-subset="Expense" ng-model="page.subsetExpense"></tm1-ui-repeat>
+
+			 <tm1-ui-dbr-read-only tm1-instance="dev" tm1-cube="System Info" tm1-elements="Financial Year, String" ng-model="page.year"></tm1-ui-dbr-read-only>
+			<!--<tm1-ui-dbr-read-only tm1-instance="dev" tm1-cube="System Info" tm1-elements="Financial Month, String" ng-model="page.month"></tm1-ui-dbr-read-only>-->
+
+	</div>
+
+	<div ng-show="false"><tm1-ui-dbra tm1-instance="dev" tm1-dimension="Department" tm1-element="{{page.title.department}}" tm1-attribute="Description" tm1-read-only="true" ng-model="mydepartment"></tm1-ui-dbra></div>
+	<div ng-show="false"><tm1-ui-dbra tm1-instance="dev" tm1-dimension="Region" tm1-element="{{page.title.region}}" tm1-attribute="Description" tm1-read-only="true" ng-model="myregion"></tm1-ui-dbra></div>
+	<!-- DATA HOLDERS END-->
+	<!--  TOP TITLE CONTAINER START -->
+	<div id="topheader"  ng-init=" findFilterStaten();" ng-init="page.year = page.yearSelected">
+		<div class="col-xs-6 btn-group btn-group pull-left "  style="margin:0px;">
+				<h4 class="col-xs-12 title-container" >
+				<span  class="title-span">
+				<!--<i ng-if="$root.isLoading"  class="fa fa-cog fa-spin" ></i>--> 
+					Dashboard Template: {{page.driver}} | {{page.year}} |
+					<tm1-ui-dbra tm1-instance="dev" tm1-read-only="true" tm1-dimension="Period" tm1-element="{{page.month}}" tm1-attribute="Short Description" ></tm1-ui-dbra> 
+				</span>
+				</h4>
+			 	<div class="driver-section">
+					<button type="button" class="btn btn-default active" ng-click="setDepartment(defaults.department)" ng-if="page.department != defaults.department">{{page.department}} <i class="fa fa-close"></i></button>
+					<button type="button" class="btn btn-default " ng-click="setRegion(defaults.region)" ng-if="page.region != defaults.region">{{page.region}} <i class="fa fa-close"></i></button>
+				</div>
+					
+			</div>
+		<div class="col-md-12 col-xs-12 nopadding"  > 
+			<div class="col-md-12 col-xs-12  pull-right nopadding"    > 
+				<div class="col-xs-12 col-xs-12  pull-right"> 
+					<ul id="filtertab" class="nav nav-tabs  " ng-init="$root.activeTab = 'KPI'" >
+						<li class="filtertab-btn pull-right" >
+								<a class="nopadding"  ng-class="$root.showfilter ? 'filteropened':'filterclosed'" ng-click="$root.showfilter = !$root.showfilter; filterOpen($root.showfilter)" data-toggle="tab" >
+									<i class="fa fa-filter" ng-if="!$root.showfilter" aria-hidden="true"></i>
+									<i class="fa fa-times" ng-if="$root.showfilter" aria-hidden="true"></i> Filter </a>
+						</li>
+					 
+						<li  class="filtertab-btn pull-right active "    >
+							<a style="margin:0px;" ng-click="$root.activeTab === 'KPI' ? $root.activeTab = '' : $root.activeTab = 'KPI' " data-toggle="tab" ng-class="$root.activeTab === 'KPI' ? 'chartbtn-off':'chartbtn-on'" ><i class="fa fa-pie-chart" aria-hidden="true"></i> KPI</a>
+						</li>
+					 
+					</ul> 
+				</div> 
+			</div> 
+			<hr class="filter-section-border"> 
+		</div>
+	</div>
+	<div id="filter-container" class="col-md-12 col-xs-12 filtercontents"  ng-show="$root.showfilter" >
+		<div class="col-md-12 nopadding"   > 
+			<div class="col-md-12 col-xs-12 pull-right nopadding">
+				<div class="col-md-12 col-xs-12 pull-right nopadding" ng-hide="!page.year || !page.month" >
+					<div  class=" col-md-12 col-xs-12 pull-right  btn-group nopadding" role="group" >
+						<button id="btnYearGroup" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{{page.year}}
+								<i class="fa fa-caret-down" style="margin-left: 10px;"></i>
+						</button>
+						<div class="dropdown-menu pull-right" style="padding: 5px; float:left;  width:100%;  overflow:auto; " aria-labelledby="btnYearGroup">
+							<button href="" ng-repeat="item in page.years" class="btn btn-default" style="width:{{ ( (100) / (page.years.length) ) }}%; margin: 0px;" ng-class="{'active': page.year == item.element}" ng-click="page.year = item.element" >
+								{{item.description}}
+							</button>
+						</div>
+					</div>
+					<div  class=" col-md-12 col-xs-12 pull-right btn-group nopadding" role="group" > 
+						<!--<button id="btnMonthGroup" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<tm1-ui-dbra tm1-instance="dev" tm1-read-only="true" tm1-dimension="Period" tm1-element="{{page.month}}" tm1-attribute="Short Description" ></tm1-ui-dbra>
+							<i class="fa fa-caret-down" style="margin-left: 10px;"></i>
+						</button>
+						<div class="dropdown-menu pull-right" style="padding: 5px; float:left; width:100%; overflow:auto; min-width:320px;" aria-labelledby="btnMonthGroup">
+							<button href="" ng-repeat="item in page.months" class="btn btn-default" style="width:{{ ( (100) / (page.months.length) ) }}%; margin: 0px;" ng-class="{'active': page.month == item.element}" ng-click="page.month = item.element" >
+								{{item.element}}
+							</button>
+						</div>-->
+						<div id="rzslider" class="col-md-12" style="padding-left:0px; padding-right:0px; overflow:hidden; overflow-x:auto;  color:#fff;" ng-init="page.showQ1=true; page.showQ2=true; page.showQ3=true; page.showQ3=true;" >
+		 <style>
+		  
+.rzslider {
+    color: #fff;
+    outline: 0;
+    pointer-events: auto;
+}
+	.rzslider .rz-pointer {
+    top: -8px;
+    z-index: 3;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-color: #0098b3;
+    border-radius: 16px;
+    outline:0;
+}
+
+.rz-active:after {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 4px;
+    content: '';
+    outline:0;
+} 
+.rzslider .rz-pointer:after {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 4px;
+    content: '';
+    outline:0;
+}
+rzslider .rz-pointer:before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 4px;
+    content: '';
+    outline:0;
+}
+ .rzslider .rz-tick.rz-selected {
+  background: #0098b3;
+}
+.rzslider .rz-selection {
+  z-index: 2;
+  background: #0098b3;
+  border-radius: 2px;
+  outline:0;
+}
+			.rz-bubble{
+				 
+				visibility: hidden !important; 
+			}
+			.rzslider .rz-tick {
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 3px;
+    height: 20px;
+    margin-left: 8px;
+    text-align: center;
+    cursor: pointer;
+    background: #f8f8f8;
+    border-radius: 0px; 
+}
+.tm1-ui-dbr-note:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    display: block;
+    border-left: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-top: 5px solid #f8f8f8;
+}
+.slider-container{
+	padding-left:0px; 
+	padding-right:0px; 
+	overflow:hidden; 
+	position:relative; 
+	height:auto; 
+	width:100%; 
+	top:0px; 
+ pointer-events:none;
+	background-color:transparent; 
+	color:#fff;
+
+}
+.slider-name-holder{
+	
+	padding-left:0px; 
+	padding-right:0px; 
+	overflow:hidden; 
+	position:absolute; 
+	height:50px; 
+	width:100%; 
+	top:0px; 
+	 
+	background-color:transparent; 
+	color:#fff;
+
+}
+ .modal-lg {
+    width: 90%;
+}
+.past{
+background-color:rgba(0,0,0,0.2);  
+}
+.future{
+background-color:rgba(255,255,255,0.2);  
+}
+@media(min-width: 769px) {  
+
+  
+}
+ 
+ 
+		 </style>
+						<div id="mobileslider" class="slider-name-holder" ng-show="mobileview">  
+							<div ng-repeat = "gg in page.months"  ng-click="selectMonth($index)"   style="top:10px; cursor: pointer; float:left; text-align: center;  position:absolute;   width:{{((sliderwidth)/(page.months.length) )}}%; left:{{( (sliderwidth)/(page.months.length)) * ( ($index) )}}%; ">{{ mobilemonths[$index]}}</div>	
+						</div> 
+						<div id="desktopslider" class="slider-name-holder" ng-show="!mobileview"> 
+							<div ng-repeat = "m in page.months" ng-click="selectMonth($index)"  style="top:3px; padding-top:5px; height:35px; float:left; text-align: center; cursor: pointer;  position:absolute;  width:{{((sliderwidth)/(page.months.length) )}}%; left:{{( (sliderwidth)/(page.months.length)) * ( ($index) )}}%; ">{{m.description}}</div>	
+						</div> 
+						<div class="slider-container"  >
+							<rzslider rz-slider-model="slider2.minValue2"
+										rz-slider-high="slider2.maxValue2"
+										rz-slider-options="slider2.options2"></rzslider>
+
+						 
+							<!--rz-slider-high="range_slider_ticks_values.maxValue"-->
+						</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--///TOP TITLE CONTAINER END /// -->
+	<!--///FIXED PAGINATION IE EXTRA CONATAINER START WITH SCROLL /// -->
+ 	<div id="pagination" class="pagination" class="col-md-12 col-xs-12 nopadding" >
+			<div  ng-if="$root.activeTab ==='KPI' && page.subsetRevenue.length && page.subsetProfit.length && page.subsetExpense.length">
+				<div  class="scroll-kpi">
+					<table>
+						<tr>
+							<td>
+								<div class="dashboard-section"  ng-if="page.subsetRevenue.length">
+									<table>
+										<tr>
+											<td class="dashboard-heading" translate="REVENUE"></td>
+											<td ng-repeat="item in page.subsetRevenue">
+												<div ng-click="setDriver(item.description)" class="panel panel-default dashboard-panel" ng-class="{ 'panel-success' : item.var < varianceTolerance, 'panel-danger' : item.var > -(varianceTolerance), 'dashboard-active' : page.driver == item.description }">
+														<div class="panel-heading">
+																<div class="row">
+																		<div class="col-xs-7 text-right">
+																				<div class="large dashboard-panel-value">
+																				<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																					tm1-cube="General Ledger"
+																					tm1-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Amount"
+																					tm1-comment-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Comment">
+																				</tm1-ui-dbr-read-only>
+																			</div>
+																		</div>
+																		<div class="col-xs-5 dashboard-panel-variance" >
+																				<tm1-ui-dbr-read-only ng-model="item.var" tm1-instance="dev" tm1-read-only="true" tm1-data-decimal="0" 
+																					tm1-cube="General Ledger" tm1-format-percentage="true"
+																					tm1-elements="Var %,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Amount">
+																				</tm1-ui-dbr-read-only>
+																		</div>
+																</div>
+																<div class="row dashboard-panel-title-section" >
+																		<div class="col-xs-12 dashboard-panel-label">
+																			{{item.description}}
+																		</div>
+																</div>
+														</div>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</td>
+							<td>
+							<div class="dashboard-section"  ng-if="page.subsetProfit.length">
+								<table>
+									<tr>
+										<td class="dashboard-heading" translate="PROFIT"></td>
+										<td ng-repeat="item in page.subsetProfit">
+											<div ng-click="setDriver(item.description)" class="panel panel-default dashboard-panel" ng-class="{ 'panel-success' : item.var < varianceTolerance, 'panel-danger' : item.var > -(varianceTolerance), 'dashboard-active' : page.driver == item.description }">
+													<div class="panel-heading">
+															<div class="row">
+																	<div class="col-xs-7 text-right">
+																			<div class="large dashboard-panel-value">
+																			<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																				tm1-cube="General Ledger"
+																				tm1-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Amount"
+																				tm1-comment-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Comment">
+																			</tm1-ui-dbr-read-only>
+																		</div>
+																	</div>
+																	<div class="col-xs-5 dashboard-panel-variance" >
+																			<tm1-ui-dbr-read-only ng-model="item.var" tm1-instance="dev" tm1-read-only="true" tm1-data-decimal="0" 
+																				tm1-cube="General Ledger" tm1-format-percentage="true"
+																				tm1-elements="Var %,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Amount">
+																			</tm1-ui-dbr-read-only>
+																	</div>
+															</div>
+															<div class="row dashboard-panel-title-section" >
+																	<div class="col-xs-12 dashboard-panel-label">
+																		{{item.description}}
+																	</div>
+															</div>
+													</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td>
+							<div class="dashboard-section"  ng-if="page.subsetExpense.length">
+								<table>
+									<tr>
+										<td class="dashboard-heading" translate="EXPENSES"></td>
+										<td ng-repeat="item in page.subsetExpense">
+											<div ng-click="setDriver(item.description)" class="panel panel-default dashboard-panel" ng-class="{ 'panel-success' : item.var > varianceTolerance, 'panel-danger' : item.var < -(varianceTolerance), 'dashboard-active' : page.driver == item.description }">
+													<div class="panel-heading">
+															<div class="row">
+																	<div class="col-xs-7 text-right">
+																			<div class="large dashboard-panel-value">
+																			<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																				tm1-cube="General Ledger"
+																				tm1-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Amount"
+																				tm1-comment-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Comment">
+																			</tm1-ui-dbr-read-only>
+																		</div>
+																	</div>
+																	<div class="col-xs-5 dashboard-panel-variance" >
+																			<tm1-ui-dbr-read-only ng-model="item.var" tm1-instance="dev" tm1-read-only="true" tm1-data-decimal="0" 
+																				tm1-cube="General Ledger" tm1-format-percentage="true"
+																				tm1-elements="Var %,{{page.year}},{{page.month}},Local,{{page.region}},{{page.department}},{{item.element}},Amount">
+																			</tm1-ui-dbr-read-only>
+																	</div>
+															</div>
+															<div class="row dashboard-panel-title-section" >
+																	<div class="col-xs-12 dashboard-panel-label">
+																		{{item.description}}
+																	</div>
+															</div>
+													</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table> 
+			</div>
+		</div>
+	</div>
+	<!--///FIXED TABLE CONATAINER START /// -->
+	<div id="fixedtable" style="margin-top: -8px;" >
+		<div class="col-md-12 col-xs-12 nopadding"    > 
+			<div class="col-md-12 col-xs-12 padding15"   > 
+				<div class="col-md-12 col-xs-12 kpi"  > 
+					<div ng-if="page.subsetRevenue.length && page.subsetProfit.length && page.subsetExpense.length">
+						<div class="row" >
+								<div class="chart col-md-6"    >
+									<!-- DATA -->
+									<div class="panel panel-default" ng-init="page.viewgraphone = true;"> 
+										<div class="panel-heading" ng-class="{'base-value': valueM == 'Base Value', 'ytd-value': valueM == 'YTD'}">
+											<i class="fa fa-bar-chart"></i> <b>{{page.driver}}</b> - {{'BYMONTH' | translate}} 
+											<span style="float:right; right:0px; ">
+												<a ng-click="page.viewgraphone = !page.viewgraphone; refreshChartafterHide()">
+													<i ng-class="page.viewgraphone ? 'fa fa-times' :'fa fa-eye'"></i></a>
+											</span>
+										</div> 
+										<div class="panel-body" ng-show="page.viewgraphone"  > 
+											<!-- GRAPH Section -->
+											<div class="row"> 
+												<div class="col-md-12" >
+													 
+													<tm1-ui-chart tm1-chart-type="multiBar"  tm1-data-decimal="0" tm1-hide-controls="true"
+														tm1-height="350" tm1-axis-label-x="{{'PREVIOUSMONTHS' | translate }}"
+														tm1-margin="{top:1,bottom:50,left:1, right:1}" tm1-legend="none" tm1-color-scheme="['#0098b3']">
+													 
+														<tm1-ui-chart-dbr  ng-repeat="month in ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']" tm1-label="{{month}}" tm1-instance="dev"
+																				tm1-cube="General Ledger"  
+																				tm1-elements="Actual,{{page.year}},{{month}},Local,{{page.region}},{{page.department}},{{page.driver}},Amount" >
+														</tm1-ui-chart-dbr> 
+														
+													</tm1-ui-chart>
+												 
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="chart col-md-6"    >
+									<!-- DATA -->
+									<div class="panel panel-default"> 
+										<div class="panel-heading" ng-class="{'base-value': valueM == 'Base Value', 'ytd-value': valueM == 'YTD'}">
+											<i class="fa fa-bar-chart"></i> <b>{{page.driver}}</b> - {{'ACTUAL' | translate}}, {{'BUDGET' | translate}}, {{'LASTYEAR' | translate}}
+											<span style="float:right; right:0px; ">
+												<a ng-click="page.viewgraphone = !page.viewgraphone; refreshChartafterHide()">
+													<i ng-class="page.viewgraphone ? 'fa fa-times' :'fa fa-eye'"></i></a>
+											</span>
+										</div>
+
+										<div class="panel-body"  ng-show="page.viewgraphone" > 
+											<!-- GRAPH Section -->
+											<div class="row"> 
+												<div class="col-md-12">
+													<tm1-ui-chart
+														tm1-height="350"
+														tm1-margin="{top:1,bottom:25,left:1, right:1}"
+														tm1-chart-type="discreteBar"
+														tm1-color-scheme="['#0098b3', 'rgb(239, 63, 34)', '#757f84']">
+
+														<tm1-ui-chart-dbr ng-repeat="version in ['Actual', 'Budget', 'Last Year']" tm1-label="{{version}}" tm1-instance="dev"
+																				tm1-cube="General Ledger" 
+																				tm1-elements="{{version}},{{page.year}},Dec,Local,{{page.region}},{{page.department}},{{page.driver}},Amount" >
+																			</tm1-ui-chart-dbr>
+
+													</tm1-ui-chart>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<!-- DATA -->
+									<div class="panel panel-default"> 
+										<div class="panel-heading">
+											<i class="fa fa-table"></i> <b>{{page.driver}}</b>
+										</div>
+										<div class="vssection btn-group" role="group" >
+											<button type="button" class="btn btn-default" ng-class="{'active': page.segment == 'region'}" style="width: 50%;" ng-click="page.segment = 'region'" translate="REGION"></button>
+											<button type="button" class="btn btn-default" ng-class="{'active': page.segment == 'department'}" style="width: 50%;" ng-click="page.segment = 'department'" translate="DEPARTMENT"></button>
+										</div>
+										<div class="panel-body" style=" overflow:auto;"> 
+											<table class="table table-striped table-responsive" >
+												<thead >
+													<tr style="border-right: 1px solid #ccc;">
+														<th>{{section.name}}</th>
+														<th class="text-right" translate="ACTUALABBR"></th>
+														<th class="text-right" translate="BUDGETABBR"></th>
+														<th class="text-right" translate="LASTYEARABBR"></th>
+														<th class="text-right hidden-xs hidden-sm hidden-md">{{'BUDGETABBR' | translate}} %</th>
+														<th class="text-right hidden-xs hidden-sm hidden-md" style="border-right:1px solid #ccc">{{'LASTYEARABBR' | translate}} %</th>
+													</tr>
+												</thead>
+
+												<tbody ng-if="page.segment == 'region'">
+													<tr ng-repeat="item in page.regions" ng-hide="page.region != defaults.region && page.region != item.description">
+														<td>
+															<span ng-if="item.description != defaults.region && page.region == item.description"> <a href="" ng-click="setRegion(defaults.region)">{{item.description}} <i class="fa fa-close"></i></a>
+															</span>
+															<span ng-if="page.region != item.description"> <a href="" ng-click="setRegion(item.description)">{{item.description}}</a>
+															</span>
+															<span ng-if="item.description == defaults.region"><b>{{item.description}}</b>
+															</span>
+														</td>
+														<td class="text-right">
+														<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+															tm1-cube="General Ledger" 
+															tm1-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{item.description}},{{page.department}},{{page.driver}},Amount"
+															tm1-comment-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{item.description}},{{page.department}},{{page.driver}},Comment"
+															></tm1-ui-dbr-read-only>
+														</td>
+														<td class="text-right"><tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																tm1-cube="General Ledger" 
+																tm1-elements="Budget,{{page.year}},{{page.month}},Local,{{item.description}},{{page.department}},{{page.driver}},Amount" >
+															</tm1-ui-dbr-read-only>
+														</td>
+														<td class="text-right"><tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																tm1-cube="General Ledger" 
+																tm1-elements="Last Year,{{page.year}},{{page.month}},Local,{{item.description}},{{page.department}},{{page.driver}},Amount">
+															</tm1-ui-dbr-read-only>
+														</td>
+														<td class="text-right hidden-xs hidden-sm hidden-md">
+															<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" tm1-format-percentage="true" 
+																	tm1-cube="General Ledger" 
+																	tm1-elements="Var %,{{page.year}},{{page.month}},Local,{{item.description}},{{page.department}},{{page.driver}},Amount">
+															</tm1-ui-dbr-read-only>
+														</td>
+														<td class="text-right hidden-xs hidden-sm hidden-md">
+															<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" tm1-format-percentage="true" 
+																	tm1-cube="General Ledger" 
+																	tm1-elements="LY %,{{page.year}},{{page.month}},Local,{{item.description}},{{page.department}},{{page.driver}},Amount">
+															</tm1-ui-dbr-read-only>
+														</td>
+													</tr>
+												</tbody>
+
+												<tbody ng-if="page.segment == 'department'">
+														<tr ng-repeat="item in page.departments" ng-hide="page.department != defaults.department && page.department != item.description">
+															<td>
+																<span ng-if="item.description != defaults.department && page.department == item.description"> <a href="" ng-click="setDepartment(defaults.department)">{{item.description}} <i class="fa fa-close"></i>
+																</a></span>
+																<span ng-if="page.department != item.description"> <a href="" ng-click="setDepartment(item.description)">{{item.description}}</a>
+																</span>
+																<span ng-if="item.description == defaults.department"><b>{{item.description}}</b>
+																</span>
+															</td>
+															<td class="text-right">
+																<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																	tm1-cube="General Ledger" 
+																	tm1-elements="Actual,{{page.year}},{{page.month}},Local,{{page.region}},{{item.description}},{{page.driver}},Amount"
+																	tm1-comment-elements="ACTUAL,{{page.year}},{{page.month}},Local,{{page.region}},{{item.description}},{{page.driver}},Comment"
+																	></tm1-ui-dbr-read-only>
+															</td>
+															<td class="text-right">
+																	<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																		tm1-cube="General Ledger" 
+																		tm1-elements="Budget,{{page.year}},{{page.month}},Local,{{page.region}},{{item.description}},{{page.driver}},Amount" >
+																	</tm1-ui-dbr-read-only>
+															</td>
+															<td class="text-right">
+																	<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" 
+																		tm1-cube="General Ledger" 
+																		tm1-elements="Last Year,{{page.year}},{{page.month}},Local,{{page.region}},{{item.description}},{{page.driver}},Amount">
+																	</tm1-ui-dbr-read-only>
+															</td>
+															<td class="text-right hidden-xs hidden-sm hidden-md">
+																		<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" tm1-format-percentage="true" 
+																			tm1-cube="General Ledger" 
+																			tm1-elements="Var %,{{page.year}},{{page.month}},Local,{{page.region}},{{item.description}},{{page.driver}},Amount">
+																		</tm1-ui-dbr-read-only>
+															</td>
+															<td class="text-right hidden-xs hidden-sm hidden-md">
+																	<tm1-ui-dbr-read-only tm1-instance="dev" tm1-data-decimal="0" tm1-format-percentage="true" 
+																		tm1-cube="General Ledger" 
+																		tm1-elements="LY %,{{page.year}},{{page.month}},Local,{{page.region}},{{item.description}},{{page.driver}},Amount">
+																	</tm1-ui-dbr-read-only>
+															</td>
+														</tr>
+												</tbody> 
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> 
+					</div>
+				</div>
+			</div> 	
+		</div>
+		<!--///FIXED TABLE FINISHED /// -->
+	</div> 

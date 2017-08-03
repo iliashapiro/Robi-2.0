@@ -1,0 +1,258 @@
+<div ng-controller="AdminJobEditorCtrl">
+  <style>
+    .button-wide{
+      min-width: 150px;
+    }
+  </style> 
+  
+  <h1><i class="fa fa-list-alt"></i> <span translate="MENUJOBEDITOR"></span></h1>
+  
+  <div class="row">
+    <div class="col-md-12">      
+      <div class="btn-group pull-right" role="group">
+        <button type="button" class="btn btn-primary button-wide" ng-disabled="values.isSaving || (values.pollerStatus != defaults.POLL_STATUS_INIT)" ng-click="saveJob()"><i class="fa fa-floppy-o"></i><span class="tm1-ui-indent" translate="SAVE"></span></button>        
+        <button type="button" class="btn button-wide" 
+          ng-class="{'btn-info':values.pollerStatus === defaults.POLL_STATUS_INIT, 
+                      'btn-success':values.pollerStatus === defaults.POLL_STATUS_RUN_SUCCESS,
+                      'btn-danger':values.pollerStatus === defaults.POLL_STATUS_RUN_ERROR}" 
+          ng-click="runJob()" ng-disabled="values.pollerStatus != defaults.POLL_STATUS_INIT">
+            <i class="fa" ng-class="{'fa-flash':values.pollerStatus === defaults.POLL_STATUS_INIT,
+                                      'fa-spinner fa-pulse':values.pollerStatus === defaults.POLL_STATUS_RUNNING,
+                                      'fa-check':values.pollerStatus === defaults.POLL_STATUS_RUN_SUCCESS,
+                                      'fa-exclamation':values.pollerStatus === defaults.POLL_STATUS_RUN_ERROR
+            }"></i>
+            <span class="tm1-ui-indent" translate="EXECUTE"></span>
+        </button>        
+        <button type="button" class="btn btn-default button-wide" ui-sref="admin.reports-manager"><i class="fa fa-angle-left"></i><span class="tm1-ui-indent" translate="BACK"></span></button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-6">
+    
+      <!-- Job Info -->
+      <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-tasks"></i><span class="tm1-ui-indent">{{'SCHEDULEDJOB' | translate}}</span><span class="label label-info tm1-ui-indent" ng-if="values.isNew" translate="NEW"></span></div>
+        <div class="panel-body">
+              
+          <div class="form-group">
+            <label class="control-label" for="inputSuccess1" translate="ID"></label>   
+            <input type="text" class="form-control" id="inputSuccess1" ng-model="values.job.id" ng-readonly="true" style="cursor: text;">
+          </div>
+          
+          <div class="form-group" ng-class="{'has-error':values.hasJobNameError}">
+            <label class="control-label" translate="NAME"></label>
+            <input class="form-control" id="job-name" ng-model="values.job.name" ng-blur="resetErrors()">
+            <span ng-if="values.hasJobNameError" id="job-name" class="help-block" translate="REQUIRED"></span>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- EMAIL -->
+      <div class="panel panel-default">
+        <div class="panel-heading"><i class="fa fa-envelope-o"></i><span class="tm1-ui-indent">{{'EMAIL' | translate}}</span></div>
+        <div class="panel-body">
+          
+          <div class="form-group" ng-class="{'has-error':values.hasEmailSubjectError}">
+            <label class="control-label" for="email-subject" translate="EMAILSUBJECT"></label>
+            <input type="text" class="form-control" id="email-subject" ng-model="values.job.subject" ng-blur="resetErrors()">
+            <span ng-if="values.hasEmailSubjectError" id="job-name" class="help-block" translate="REQUIRED"></span>
+          </div>
+          
+          <div class="form-group" ng-class="{'has-error':values.hasEmailToError || values.hasInvalidEmailError}">
+            <label class="control-label" for="email-to" translate="EMAILTO"></label>
+            <input type="text" class="form-control" id="email-to" ng-model="values.job.to" ng-blur="resetErrors()">
+            <span ng-if="values.hasEmailToError" id="job-name" class="help-block" translate="REQUIRED"></span>
+            <span ng-if="values.hasInvalidEmailError" id="job-name" class="help-block" translate="INVALIDEMAILFORMAT"></span>
+          </div>
+          
+          <div class="form-group">
+            <label class="control-label" for="email-body" translate="EMAILBODY"></label>
+            <div id="email-body" text-angular ng-model="values.job.body"></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+          
+      <!-- Triggers -->
+      <div class="panel" ng-class="{'panel-default':!values.hasTriggerError, 'panel-danger': values.hasTriggerError}">
+        <div class="panel-heading"><i class="fa fa-clock-o"></i>
+          <span class="tm1-ui-indent">{{'RUNSCHEDULES' | translate}}</span>
+          <a ng-click="addTrigger()" class="pull-right tm1-ui-indent"><i class="fa fa-plus"></i></a>     
+        </div>
+        <div class="panel-body">
+          
+          
+          <div class="row" ng-repeat="trigger in values.job.triggers track by $index">
+            <div class="col-md-12">
+              <div class="row">
+              	
+              	<div class="col-md-1">
+                  <label for="trigger-action">&nbsp;</label>
+                  <a ng-click="values.job.triggers.splice($index, 1)" class="center-block"><i class="fa fa-trash-o fa-fw"></i></a>
+                </div>
+                
+                <div class="col-md-3">
+                  <label for="trigger-name">{{'NAME' | translate}}</label>
+                  <input type="text" class="form-control" id="trigger-name" placeholder="{{'NAME' | translate}}" ng-model="trigger.name">
+                </div>
+                
+                <div class="col-md-8">
+                  <label for="trigger-cron" translate="SCHEDULE"></label>              
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="trigger-description" placeholder="{{'DESCRIPTION' | translate}}" ng-model="trigger.description" ng-disabled="true">
+                    <div ng-click="setTrigger(trigger)" class="input-group-addon" style="cursor: pointer;" data-toggle="modal" data-target="#cronModal"><i class="fa fa-life-saver"></i></div>
+                  </div>
+                  
+                </div>   
+                
+              </div>
+              
+              <div class="row" ng-if="!$last">
+                <div class="col-md-12">
+                  <hr />
+                </div>
+              </div>
+              
+            </div>             
+          </div>
+          
+          
+          
+        </div>
+      </div>
+      
+      
+      <!-- Reports -->
+      <div class="panel" ng-class="{'panel-default':!values.hasReportError, 'panel-danger': values.hasReportError}">
+        <div class="panel-heading"><i class="fa fa-paperclip"></i>
+          <span class="tm1-ui-indent">{{'ATTACHMENTS' | translate}}</span>
+          <a ng-click="addReport()" class="pull-right tm1-ui-indent"><i class="fa fa-plus"></i></a>      
+        </div>
+        <div class="panel-body">
+          
+          
+          <div class="row" ng-repeat="report in values.job.reports track by $index">
+            <div class="col-md-12">          
+              <div class="row">
+              	<div class="col-md-1">
+                  <label for="report-action">&nbsp;</label>
+                  <a ng-click="values.job.reports.splice($index, 1)"><i class="fa fa-trash-o fa-fw"></i></a>
+                </div>
+                <div class="col-md-3">
+                  <label for="report-name">{{'NAME' | translate}}</label>
+                  <input id="report-name" class="form-control" placeholder="{{'NAME' | translate}}" ng-model="report.name">
+                </div>
+                <div class="col-md-4">
+                  <label for="report-page-size" translate="PAGESIZE"></label>
+                  <select id="report-page-size" class="form-control" ng-model="report.pageSize">            
+                    <option value="LETTER">{{'LETTER' | translate}}</option>
+                    <option value="LEGAL">{{'LEGAL' | translate}}</option>
+                    <option value="TABLOID">{{'TABLOID' | translate}}</option>
+                    <option value="A3">A3</option>
+                    <option value="A4">A4</option>
+                    <option value="A5">A5</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="report-page-orientation" translate="PAGEORIENTATION"></label>
+                  <select id="report-page-orientation" class="form-control" ng-model="report.orientation">            
+                    <option value="PORTRAIT">{{'PORTRAIT' | translate}}</option>
+                    <option value="LANDSCAPE">{{'LANDSCAPE' | translate}}</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-11 col-md-offset-1">
+                  <input class="form-control" placeholder="{{'URL' | translate}}" ng-model="report.url">              
+                </div>
+              </div>
+              
+              <div class="row tm1-ui-indent">
+                <div class="col-md-11 col-md-offset-1">
+                  <p>
+                    <strong><small translate="CREDENTIALS"></small></strong>
+                    <a ng-click="addReportCredential(report);" class="tm1-ui-indent"><i class="fa fa-plus"></i></a>
+                  </p>
+                </div>
+              </div>
+              
+              <div class="row tm1-ui-indent" ng-repeat="credential in report.credentials track by $index">
+                <div class="col-md-1">
+                  <label for="credential-action">&nbsp;</label>
+                  <a ng-click="deleteReportCredential(report, $index);"><i class="fa fa-trash-o fa-fw"></i></a>
+                </div>
+                
+                <div class="col-md-2">
+                  <label for="credential-instance">{{'INSTANCE' | translate}}</label>
+                  <input id="credential-instance" class="form-control" type="text" placeholder="{{'INSTANCE' | translate}}" ng-model="credential.instance">              
+                </div>            
+                <div class="col-md-3">
+                  <label for="credential-username" translate="USERNAME"></label>
+                  <input id="credential-username" class="form-control" type="text" placeholder="{{'USERNAME' | translate}}" ng-model="credential.userName">
+                </div>
+                <div class="col-md-3">
+                  <label for="credential-password" translate="PASSWORD"></label>
+                  <input id="credential-password" class="form-control" type="password" placeholder="{{'PASSWORD' | translate}}" ng-model="credential.password">  
+                </div>
+                
+                <div ng-class="{'col-md-3':!credential.useCAM, 'col-md-1':credential.useCAM}">
+                  <label for="credential-use-cam" translate="USECAM"></label>
+                  <p><input id="credential-use-cam" type="checkbox" ng-model="credential.useCAM"></p>
+                </div>            
+                <div class="col-md-2" ng-if="credential.useCAM">
+                  <label for="credential-cam" translate="CAMNAMESPACE"></label>
+                  <input id="credential-cam" class="form-control" type="text" placeholder="{{'CAMNAMESPACE' | translate}}" ng-model="credential.camNamespace">              
+                </div>
+                
+                
+              </div>
+              
+              <div class="row" ng-if="!$last">
+                <div class="col-md-12">
+                  <hr />
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          
+          
+        </div>
+      </div>
+      
+          
+    </div>
+  </div>
+   
+  <!-- Model for the CRON Helper -->
+  <div class="modal fade" id="cronModal" tabindex="-1" role="dialog" aria-labelledby="cronHelperModal">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn btn-default pull-right" data-dismiss="modal" translate="CANCEL"></button>
+          <h4 class="modal-title" id="cronHelperModal" translate="CRONHELPER"></h4>
+        </div>
+        <div class="modal-body">
+          <tm1-ui-cron 
+            ng-if="values.showTriggerModal"
+            tm1-apply-clipboard-modal-fix="true"
+            tm1-cron-selection-model="targetTrigger.cronHelperSelectionJson"            
+            tm1-cron-description-model="targetTrigger.description"
+            tm1-on-cron-apply="onCronHelperApply()"
+            ng-model="targetTrigger">
+          </tm1-ui-cron>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+</div>

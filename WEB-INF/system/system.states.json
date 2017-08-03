@@ -1,0 +1,36 @@
+{
+    "home":{
+    	"url": "/",
+        "templateUrl": "html/home.html"
+    },
+    
+    "help": {
+        "url": "/help",
+        "templateUrl": "html/system/help.html"
+    },
+      
+    "configuration": {
+        "url": "/configuration",
+        "templateUrl": "html/system/configuration.html"
+    },
+    
+    "bootstrap":{
+        "url": "/bootstrap",
+        "templateUrl": "html/system/bootstrap.html"
+    },
+    
+    "about":{
+    	"url": "/about",
+        "templateUrl": "assets/html/about.html"
+    },
+    
+    "login":{
+    	"url": "/login/:instance?type&name",
+      "templateUrl": "html/login.html"
+    },
+    
+    "test-service":{
+    	"url": "/test/services",
+      "templateUrl": "html/system/test/services.html"
+    }
+}

@@ -1,0 +1,177 @@
+[
+	{
+        "label": "Samples",
+        "icon_class": "fa-globe",
+        "data": {"page": "sample"},
+        "expanded": false,
+        "children":[
+            {
+		        "label": "Setup",
+		        "icon_class": "fa-cogs",
+		        "data": {"page": "setup"}
+		    }, 
+        	{
+	            "label": "Simple SUBNM & DBR",
+	            "icon_class": "fa-file-o",
+	            "data": {"page": "sample1"}
+	        },
+	        {
+	            "label": "Skinning the tm1-ui Components",
+	            "icon_class": "fa-picture-o",
+	            "data": {"page": "sample2"}
+	        },
+	        {
+                "label": "Sortable, Filtered Table",
+                "icon_class": "fa-table",
+                "data": {"page": "sample-table"}
+            },
+            {
+                "label": "Full Dashboard Example",
+                "icon_class": "fa-money",
+                "data": {"page": "sample3"}
+            },
+            {
+                "label": "Printing",
+                "icon_class": "fa-print",
+                "data": {"page": "print"}
+            },
+            {
+                "label": "Data Entry Template",
+                "icon_class": "fa-pencil-square",
+                "data": {"page": "sample6"}
+            },
+            {
+                "label": "Salary Template",
+                "icon_class": "fa-users",
+                "data": {"page": "sample7"}
+            },
+            {
+                "label": "Navigation",
+                "icon_class": "fa-link",
+                "data": {"page": "sample4"}
+            },
+            {
+                "label": "Visualisations",
+                "icon_class": "fa-codiepie",
+                "data": {"page": "sample8"}
+            },
+            {
+                "label": "Upload Files",
+                "icon_class": "fa-upload",
+                "data": {"page": "sample9"}
+            },
+	        {
+	            "label": "Cube List",
+	            "icon_class": "fa-cubes",
+	            "data": {"page": "sample-cubes"}
+	        },
+          {
+              "label": "SQL",
+              "icon_class": "fa-database",
+              "data": {"page": "sample-sql"}
+          },
+          {
+              "label": "Named MDX",
+              "icon_class": "fa-cubes",
+              "data": {"page": "mdx-named"}
+          },
+          {
+              "label": "Grid",
+              "icon_class": "fa-table",
+              "data": {"page": "sample-grid"}
+          },
+	        {
+            "label": "Components",
+            "icon_class": "fa-wrench",
+            "data": {"page": "component"},
+            "expanded": false,
+            "children":[
+                {
+                    "label": "SUBNM",
+                    "icon_class": "fa-search",
+                    "data": {"page": "subnm"}
+                },
+                
+                {
+                    "label": "DBR",
+                    "icon_class": "fa-cube",
+                    "data": {"page": "dbr"}
+                },                
+                
+                {
+                    "label": "DBRA",
+                    "icon_class": "fa-tag",
+                    "data": {"page": "dbra"}
+                },
+                
+                {
+                    "label": "Execute TI Process",
+                    "icon_class": "fa-play-circle-o",
+                    "data": {"page": "process"}
+                },
+                
+                {
+                    "label": "Store Preferences",
+                    "icon_class": "fa-floppy-o",
+                    "data": {"page": "store"}
+                },
+                
+                {
+                    "label": "Active Form",
+                    "icon_class": "fa-indent",
+                    "data": {"page": "activeform"}
+                },
+                
+                {
+                    "label": "TM1 Web",
+                    "icon_class": "fa-globe",
+                    "data": {"page": "tm1web"}
+                },
+                
+                {
+                    "label": "MDX and Charts",
+                    "icon_class": "fa-diamond",
+                    "data": {"page": "mdx-chart"}
+                },
+                
+                {
+                    "label": "Element List",
+                    "icon_class": "fa-list-ul",
+                    "data": {"page": "element-list"}
+                },
+                
+                {
+                    "label": "Charts",
+                    "icon_class": "fa-dashboard",
+                    "data": {"page": "charts"}
+                },
+                
+                {
+                    "label": "Upload",
+                    "icon_class": "fa-upload",
+                    "data": {"page": "upload"}
+                },
+                
+                {
+                    "label": "MDX Table",
+                    "icon_class": "fa-table",
+                    "data": {"page": "mdx-table"}
+                }
+              ]
+           },
+           {
+                "label": "Templates",
+                "icon_class": "fa-edit",
+                "data": {"page": "templates"},
+	            "expanded": false,
+	            "children":[
+	                {
+	                    "label": "Dashboard",
+	                    "icon_class": "fa-line-chart",
+	                    "data": {"page": "template-dashboard"}
+	                }
+	             ] 
+            }       
+        ]
+    }		
+]

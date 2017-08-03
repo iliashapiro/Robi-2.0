@@ -1,0 +1,725 @@
+<div ng-controller="ServicesCtrl">
+
+  <div class="toolbar">
+    <div class="pull-right">
+
+    </div>
+    <h3><strong>Service Tests</strong></h3>
+  </div>
+  
+  <div class="well">{{page.result}}</div>  
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Input</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Admin Login -->
+        <tr>
+          <td>Admin Login</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.test1.user" placeholder="Console Username...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="password" class="form-control" ng-model="page.test1.pass" placeholder="Console Password...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationAdminLogin(page.test1.user, page.test1.pass)">Test</button>
+          </td>
+        </tr>
+
+        <!-- Admin Logout -->
+        <tr>
+          <td>Admin Logout</td>
+          <td>
+
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationAdminLogout()">Test</button>
+          </td>
+        </tr>
+
+        <!-- Application Info -->
+        <tr>
+          <td>Application Info</td>
+          <td>
+
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationInfo()">Test</button>
+          </td>
+        </tr>
+
+        <!-- Application Instances -->
+        <tr>
+          <td>Application Instances</td>
+          <td>
+
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationInstances()">Test</button>
+          </td>
+        </tr>
+
+        <!-- Application Login -->
+        <tr>
+          <td>Application Login</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="password" class="form-control" ng-model="page.app.cam" placeholder="CAM...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.user" placeholder="Username...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="password" class="form-control" ng-model="page.app.pass" placeholder="Password...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationLogin(page.app.instance, page.app.user, page.app.pass, page.app.cam)">Test</button>
+          </td>
+        </tr>
+
+        <!-- Application Logout -->
+        <tr>
+          <td>Application Logout</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationLogout(page.app.instance)">Test</button>
+          </td>
+        </tr>
+
+        <!-- Application Menus -->
+        <tr>
+          <td>Application Menus</td>
+          <td>
+
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationMenus()">Test</button>
+          </td>
+        </tr>
+
+        <!-- Application Name -->
+        <tr>
+          <td>Application Name</td>
+          <td>
+
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationName()">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Application Refresh -->
+        <tr>
+          <td>Application Refresh</td>
+          <td>
+
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="dataRefresh()">Test</button>
+          </td>
+        </tr>
+
+        <!-- Application User -->
+        <tr>
+          <td>Application User</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="applicationUser(page.app.instance)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Application Delete File -->
+        <tr>
+          <td>Application Delete File</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.fileToDelete" placeholder="File Path To Delete...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="deleteFile(page.app.instance, page.app.fileToDelete)">Test</button>
+          </td>
+        </tr>
+
+        <!-- Attribute Get -->
+        <tr>
+          <td>Attribute Get</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.dimension" placeholder="Dimension...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element" placeholder="Element...">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.attribute" placeholder="Attribute...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="attributeGet(page.app.instance, page.app.dimension, page.app.element, page.app.attribute)">Test</button>
+          </td>
+        </tr>
+
+
+        <!-- Attribute Put -->
+        <tr>
+          <td>Attribute Put</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.dbra.value" placeholder="Value...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.dimension" placeholder="Dimension...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element" placeholder="Element...">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.attribute" placeholder="Attribute...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="attributePut(page.app.dbra.value, page.app.instance, page.app.dimension, page.app.element, page.app.attribute)">Test</button>
+          </td>
+        </tr>
+
+  
+        <!-- Cell Get -->
+        <tr>
+          <td>Cell Get</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.cube" placeholder="Cube...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element1" placeholder="Element1...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element2" placeholder="Element2...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element3" placeholder="Element3...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element4" placeholder="Element4...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element5" placeholder="Element5...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element6" placeholder="Element6...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element7" placeholder="Element7...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element8" placeholder="Element8...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element9" placeholder="Element9...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element10" placeholder="Element10...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="cellGet(page.app.instance, page.app.cube, page.app.element1, page.app.element2, page.app.element3, page.app.element4, page.app.element5, page.app.element6, page.app.element7, page.app.element8, page.app.element9, page.app.element10)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Multiple Cell Get -->
+        <tr>
+          <td>Cell Gets</td>
+          <td>
+            
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="multiDbrTest()">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Batched Cell Get -->
+        <tr>
+          <td>Cell Get (Batched)</td>
+          <td>
+            
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="batchedDbrTest()">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Cell Put -->
+        <tr>
+          <td>Cell Put</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.value" placeholder="Value...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.cube" placeholder="Cube...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element1" placeholder="Element1...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element2" placeholder="Element2...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element3" placeholder="Element3...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element4" placeholder="Element4...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element5" placeholder="Element5...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element6" placeholder="Element6...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element7" placeholder="Element7...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element8" placeholder="Element8...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element9" placeholder="Element9...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.element10" placeholder="Element10...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="cellPut(page.app.value, page.app.instance, page.app.cube, page.app.element1, page.app.element2, page.app.element3, page.app.element4, page.app.element5, page.app.element6, page.app.element7, page.app.element8, page.app.element9, page.app.element10)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Cube Execute MDX -->
+        <tr>
+          <td>Cube Execute MDX</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.mdx" placeholder="MDX...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.restPath" placeholder="Rest Path...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="cubeExecuteMdx(page.app.instance, page.app.mdx, page.app.restPath)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Cube View Definition -->
+        <tr>
+          <td>Cube View Definition</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.cube" placeholder="Cube...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.view" placeholder="View...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="cubeView(page.app.instance, page.app.cube, page.app.view)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Cube Views -->
+        <tr>
+          <td>Cube Views </td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.cube" placeholder="Cube...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="cubeViews(page.app.instance, page.app.cube)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Cubes -->
+        <tr>
+          <td>Cubes </td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="cubes(page.app.instance)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Dimension Element -->
+        <tr>
+          <td>Dimension Element </td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.dimension" placeholder="Dimension...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.elementOrAlias" placeholder="Element or Alias...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.attributes" placeholder="Attributes...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="dimensionElement(page.app.instance, page.app.dimension, page.app.elementOrAlias, page.app.attributes)">Test</button>
+          </td>
+        </tr>
+        
+        <!-- Dimension Elements -->
+        <tr>
+          <td>Dimension Elements </td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.dimension" placeholder="Dimension...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.attributes" placeholder="Attributes...">
+              </div>
+            </div>
+            
+             <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.subset" placeholder="Subset...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.mdx" placeholder="MDX...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.filter" placeholder="Filter...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.batchSize" placeholder="batchSize...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.showHierarchy" placeholder="showHierarchy...">
+              </div>
+            </div>
+            
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.elementsOnly" placeholder="Element Only...">
+              </div>
+            </div>
+            
+            
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="dimensionElements(page.app.instance, page.app.dimension, page.app.attributes, page.app.subset, page.app.mdx, page.app.filter, page.app.batchSize, page.app.showHierarchy, page.app.elementsOnly)">Test</button>
+          </td>
+        </tr>
+        
+        
+        <!-- Process -->
+        <tr>
+          <td>Process Info</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.name" placeholder="Process Name...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="process(page.app.instance, page.app.name)">Test</button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td>Process Execute</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.instance" placeholder="Instance...">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.name" placeholder="Process Name..." 
+                  ng-change="updateProcessParameters(page.app.instance, page.app.name)">
+              </div>
+            </div>
+            <div class="row" ng-repeat="parameter in page.app.parameters track by $index">
+              <div class="col-md-4">
+                {{parameter.Name}}
+              </div>
+              <div class="col-md-8">
+                <input type="text" class="form-control" ng-model="page.app.parameters[$index].Value" placeholder="{{parameter.Name}}">
+              </div>
+            </div>            
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="processExecute(page.app.instance, page.app.name, page.app.parameters)">Test</button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td>Process Execute (New Form)</td>
+          <td>
+                      
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="batchTest()">Test</button>
+          </td>
+        </tr>
+        
+        
+        <!-- Utilities -->
+        <tr>
+          <td>Generate UUID</td>
+          <td>
+                      
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="generateUUID()">Test</button>
+          </td>
+        </tr>
+        
+        <tr>
+          <td>Format Number</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.value" placeholder="Value to Format...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.decimal" placeholder="Decimal Places...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="formatNumber(page.app.value, page.app.decimal)">Test</button>
+            <span class="label label-info">{{page.app.formattedNumber}}</span>
+          </td>
+        </tr>
+        
+        <tr>
+          <td>Format Percentage</td>
+          <td>
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.value" placeholder="Value to Format...">
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" ng-model="page.app.decimal" placeholder="Decimal Places...">
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" ng-click="formatPercentage(page.app.value, page.app.decimal)">Test</button>
+            <span class="label label-info">{{page.app.formattedPercentage}}</span>
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+</div>

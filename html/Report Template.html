@@ -1,0 +1,814 @@
+  <style>
+ #wrapper{
+	overflow:hidden;
+}
+body{
+	overflow:hidden;
+}
+#page-view {
+    padding: 0px;
+    padding-top: 32px;
+    padding-bottom: 5px;
+   
+}
+ </style>
+<div ng-controller="ReportTemplateCtrl" id="fixedcontroler" class="fixedcontroler" ng-class="$root.navisopened &&  !mobileview ? 'navopen':'navclose'"  style=" position:fixed; overflow:hidden;    margin:0px;" >
+
+<div ng-hide="true">
+		 
+			<tm1-ui-repeat tm1-instance="dev"  tm1-dimension="Year" tm1-subset="Default" ng-model="page.years"></tm1-ui-repeat>
+ 
+
+			 <tm1-ui-dbr-read-only tm1-instance="dev" tm1-cube="System Info" tm1-elements="Financial Year, String" ng-model="page.year"></tm1-ui-dbr-read-only>
+			<!--<tm1-ui-dbr-read-only tm1-instance="dev" tm1-cube="System Info" tm1-elements="Financial Month, String" ng-model="page.month"></tm1-ui-dbr-read-only>-->
+
+	</div>
+ <div ng-show="false"><tm1-ui-dbra tm1-instance="dev" tm1-dimension="Department" tm1-element="{{page.title.department}}" tm1-attribute="Description" tm1-read-only="true" ng-model="mydepartment"></tm1-ui-dbra></div>
+ <div ng-show="false"><tm1-ui-dbra tm1-instance="dev" tm1-dimension="Region" tm1-element="{{page.title.region}}" tm1-attribute="Description" tm1-read-only="true" ng-model="myregion"></tm1-ui-dbra></div>
+   
+		<div id="topheader"  ng-init=" findFilterStaten();">
+		 	<div class="col-xs-6 btn-group btn-group pull-left "  >
+				<h4 class="col-xs-12 title-container" >
+				<span  class="title-span">
+          <!--<i ng-if="$root.isLoading"  class="fa fa-cog fa-spin" ></i>-->
+          Salary Template: {{mydepartment}} | {{myregion}} | {{page.year}} 
+				 
+				</span>
+				</h4>
+			 	<div style="position:relative; float:left;  left:0px; padding-top:10px; width:100%;">
+					<button type="button" class="btn btn-default active" ng-click="setDepartment(defaults.department)" ng-if="page.department != defaults.department">{{page.department}} <i class="fa fa-close"></i></button>
+					<button type="button" class="btn btn-default active" ng-click="setRegion(defaults.region)" ng-if="page.region != defaults.region">{{page.region}} <i class="fa fa-close"></i></button>
+				</div>
+					
+			</div>
+	 
+    <div class="col-xs-6 pull-right" style="min-width:380px;">
+      <ul id="filtertab" class="  nav nav-tabs  " ng-init="activeTab = 'Table'" style="margin-right:0px; position:relative; bottom:0px; right:0px; float:right; margin-left: 0px; margin-bottom:0px;  ">
+        <li style="padding-right:10px; padding-left:10px;margin-left: 0px; display:inline-block; width:auto; float:right; background-color:transparent; color:#757f84; " ><a style="margin:0px; "  ng-class="$root.showfilter ? 'filteropened':'filterclosed'" ng-click="$root.showfilter = !$root.showfilter; filterOpen($root.showfilter)" data-toggle="tab"><i class="fa fa-filter" ng-if="!$root.showfilter" aria-hidden="true"></i><i class="fa fa-times" ng-if="$root.showfilter" aria-hidden="true"></i> Filter </a></li>
+
+      </ul>
+    </div>
+	 	<hr class="filter-section-border"> 
+  </div>
+    <div id="filter-container" class="col-md-12 col-xs-12 filtercontents"  ng-show="$root.showfilter"  style="pointer-events:none;">
+       <div class="col-md-12 col-xs-12" style="background-color:transparent; height:auto; padding:0px;padding-top:5px; padding-left:0px; pointer-events:auto;">
+         <!--<tm1-ui-subnm-hidden tm1-instance="dev" tm1-dimension="Year" tm1-subset="Default" tm1-show-hierarchy="false" tm1-default-element="2016" ng-model="page.year"></tm1-ui-subnm-hidden>-->
+          <button id="btnYearGroup" type="button" style="  float:left;  width:100%;  overflow:hidden; " class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{{page.year}}
+								<i class="fa fa-caret-down" style="margin-left: 10px;"></i>
+						</button>
+						<div class="dropdown-menu pull-right" style="padding: 5px; float:left;  width:100%;  overflow:auto; " aria-labelledby="btnYearGroup">
+							<button href="" ng-repeat="item in page.years" class="btn btn-default" style="width:{{ ( (100) / (page.years.length) ) }}%; margin: 0px;" ng-class="{'active': page.year == item.element}" ng-click="page.year = item.element" >
+								{{item.description}}
+							</button>
+						</div>
+          <!--<tm1-ui-subnm tm1-instance="dev" tm1-dimension="Year" tm1-subset="Default" tm1-show-hierarchy="false" tm1-default-element="2016" ng-model="page.year"></tm1-ui-subnm>-->
+        </div>
+      <div class="col-md-12 col-xs-12" style=" padding:0px; pointer-events:auto; " ng-init="page.showQ1='true'; page.showQ2='true'; page.showQ3='true'; page.showQ4='true'; page.suppressZeros = 'true'"> 
+        
+       <!-- <div class="col-md-3" style="background-color:transparent; height:auto; padding:0px;padding-top:5px; padding-left:0px;">
+          <div style="width:100%; background-color:transparent; height:40px; display:inline-block;  ">
+            <input type="text" class="form-control" style="height:35px;" placeholder="Search employee..." ng-change="table.refresh()" ng-model="page.filter"></input>
+          </div> 
+        </div>-->
+        <div id="desktopslider" style="padding-left:0px; padding-right:0px; overflow:hidden; position:absolute; height:50px; width:100%; text-align:center; top:5px;  background-color:transparent; color:#fff;"> 
+							<div ng-repeat = "n in page.quarter" ng-click="selectMonth($index)" style="width:{{( (100)/(page.quarter.length) )}}%; top:0px; cursor: pointer;  float:left; text-align:center; position:absolute; left:{{( (100)/(page.quarter.length)) * ( ($index)  )}}%; ">{{n}}</div>	
+						</div> 
+       <div id="rzslider" style="padding-left:0px; padding-right:0px; height:60px;overflow:hidden; width:100%; overflow-x:auto;  color:#fff;"  >
+		  <style>
+		  
+  .rzslider {
+    color: #fff;
+    outline: 0;
+    pointer-events: auto;
+  }
+	.rzslider .rz-pointer {
+    top: -8px;
+    z-index: 3;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background-color: #0098b3;
+    border-radius: 16px;
+    outline:0;
+}
+
+.rz-active:after {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 4px;
+    content: '';
+    outline:0;
+} 
+.rzslider .rz-pointer:after {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 4px;
+    content: '';
+    outline:0;
+}
+rzslider .rz-pointer:before {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 4px;
+    content: '';
+    outline:0;
+}
+ .rzslider .rz-tick.rz-selected {
+  background: #0098b3;
+}
+.rzslider .rz-selection {
+  z-index: 2;
+  background: #0098b3;
+  border-radius: 2px;
+  outline:0;
+}
+			.rz-bubble{
+				 
+				visibility: hidden !important; 
+			}
+			.rzslider .rz-tick {
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 3px;
+    height: 20px;
+    margin-left: 8px;
+    text-align: center;
+    cursor: pointer;
+    background: #f8f8f8;
+    border-radius: 0px; 
+}
+.tm1-ui-dbr-note:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    display: block;
+    border-left: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-top: 5px solid #f8f8f8;
+}
+.slider-container{
+	padding-left:0px; 
+	padding-right:0px; 
+	overflow:hidden; 
+	position:relative; 
+	height:auto; 
+	width:100%; 
+	top:0px; 
+	 
+	background-color:transparent; 
+	color:#fff;
+
+}
+.slider-name-holder{
+	
+	padding-left:0px; 
+	padding-right:0px; 
+	overflow:hidden; 
+	position:absolute; 
+	height:50px; 
+	width:100%; 
+	top:0px; 
+	 
+	background-color:transparent; 
+	color:#fff;
+
+}
+ .modal-lg {
+    width: 90%;
+}
+.rzslider .rz-bar-wrapper {
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 32px;
+    padding-top: 0px;
+    margin-top: 0px;
+    box-sizing: border-box;
+}
+@media(min-width: 769px) {  
+
+  
+}
+ 
+ 
+		 </style>
+					  
+						<div style="padding-left:0px; padding-right:0px; overflow:hidden; position:relative; height:auto; width:100%; top:0px;  background-color:transparent; color:#fff; pointer-events:none;">
+							<rzslider rz-slider-model="slider2.minValue2"
+										rz-slider-high="slider2.maxValue2"
+										rz-slider-options="slider2.options2"></rzslider>
+
+						 
+							<!--rz-slider-high="range_slider_ticks_values.maxValue"-->
+						</div>
+						</div>
+       
+        <!--<div class="col-md-8 col-xs-12 pull-left"  style="  padding-right:0px; padding-left:0px; padding-bottom:10px;" >
+           <div class="btn-group btn-group-justified">
+             <div class="btn-group">
+                <button style="outline:0;" class="btn" ng-class="{'btn-primary': page.showQ1}" ng-click="page.showQ1=!page.showQ1" ng-init="page.showQ1=true">Q1</button>
+             </div>
+             <div class="btn-group">
+                <button style="outline:0;" class="btn" ng-class="{'btn-primary': page.showQ2}" ng-click="page.showQ2=!page.showQ2" ng-init="page.showQ2=true">Q2</button>
+             </div>
+             <div class="btn-group">
+                <button style="outline:0;" class="btn" ng-class="{'btn-primary': page.showQ3}" ng-click="page.showQ3=!page.showQ3" >Q3</button>
+             </div>
+             <div class="btn-group">
+                <button style="outline:0;" class="btn" ng-class="{'btn-primary': page.showQ4}" ng-click="page.showQ4=!page.showQ4" >Q4</button> 
+             </div>
+           </div>   
+         
+        </div>-->
+        <div   class="col-md-6 col-xs-12" style="background-color:transparent; height:auto; padding:0px;padding-top:5px; padding-left:0px;">
+          
+          <div id="filtersubnm1" style="width:100%; background-color:transparent; height:40px; display:inline-block;  ">
+            <tm1-ui-subnm tm1-instance="dev" tm1-dimension="Department" tm1-attribute="Description" tm1-default-element="{{$root.$stateParams.dept?$root.$stateParams.dept:'6'}}" tm1-select-only="true" ng-model="page.title.department"></tm1-ui-subnm>
+            <tm1-ui-element tm1-instance="dev" tm1-dimension="Department" tm1-element="{{page.title.department}}" ng-model="page.title.departmentDetails"></tm1-ui-element>
+          </div>
+
+        </div>
+        <div   class="col-md-6 col-xs-12" style="background-color:transparent; height:auto; padding:0px;padding-top:5px; padding-left:0px;">
+
+          <div id="filtersubnm2" style="width:100%; background-color:transparent; height:40px; display:inline-block;  ">
+            <tm1-ui-subnm tm1-instance="dev" tm1-dimension="Region" tm1-attribute="Description" tm1-default-element="{{$root.$stateParams.region?$root.$stateParams.region:'3'}}" tm1-subset="Default" tm1-select-only="true" ng-model="page.title.region"></tm1-ui-subnm> 
+            <tm1-ui-element tm1-instance="dev" tm1-dimension="Region" tm1-element="{{page.title.region}}" ng-model="page.title.regionDetails"></tm1-ui-element>
+          </div>
+
+        </div>
+        
+      </div>
+      
+      
+         
+    </div>
+ 
+
+
+  <div id="pagination" class="pagination" class="col-md-12" style="padding:0px; margin:0px; margin-top:-8px;"  ng-show="activeTab === 'Table'">
+      
+      <div class="col-md-12 cols-xs-12 btn-group pull-left"  role="group" style="  margin:0px; width:100%; padding-top:10px; padding-bottom:5px;" > 
+         <div class="col-md-4 col-xs-12 " style="padding:0px; margin:0px;">
+            <input type="text" class="form-control pull-left"  style="height:35px; width:100%;" placeholder="Search employee..." ng-change="table.refresh()" ng-model="page.filter"></input>
+         </div>
+         <div class="col-md-5 col-xs-12 " style="padding:0px; margin:0px;">
+          <div class="col-md-4 col-xs-12 " style="padding:0px; margin:0px;">
+            <button class="btn btn-success pull-left" style="width:100%; margin-left:0px; height:35px;  outline:0;" ng-disabled="page.title.departmentDetails.level > 0 || page.title.regionDetails.level > 0" data-toggle="modal" data-target="#modalAdd">Add Employee</button>
+          </div>
+          <div class="col-md-4 col-xs-6 " style="padding:0px; margin:0px;">
+            <button class="btn pull-left" style="width:100%; outline:0; height:35px; top:0px; border: none;" ng-class="page.suppressZeros ? 'btn-primary': 'btn-default'" ng-click="page.suppressZeros=!page.suppressZeros;table.refresh();"><span>Suppress Zeroes<sup>{{page.suppressZeros ? '+':'-'}}</sup></button>
+          </div>
+          <div class="col-md-4 col-xs-6 " style="padding:0px; margin:0px;">
+            <button class="btn pull-left"   style="width:100%; outline:0; height:35px; border: none; padding-right:10px;"  ng-class="page.employmentPeriod ? 'btn-primary': 'btn-default'" ng-click="page.employmentPeriod=!page.employmentPeriod">Employment Period</button>
+          </div>
+       </div> 
+         <div class="col-md-3 col-xs-12 " style="padding:0px; margin:0px;">
+          <button type="button" class="btn btn-default pull-right" ng-class="{'active': table.isPageSize(100)}" style="width:20%" ng-click="table.pageSize(100)">100</button>
+          <button type="button" class="btn btn-default pull-right" ng-class="{'active': table.isPageSize(50)}" style="width:15%"ng-click="table.pageSize(50)">50</button> 
+          <button type="button" class="btn btn-default pull-right" ng-class="{'active': table.isPageSize(10)}" style="width:15%"ng-click="table.pageSize(10)">10</button>
+           
+        <!--<button type="button" class="btn btn-default pull-right" ng-class="{'active': table.isPageSize(30)}" ng-click="table.pageSize(30)">30</button>-->
+        <!--<button type="button" class="btn btn-default pull-right" ng-class="{'active': table.isPageSize(20)}" ng-click="table.pageSize(20)">20</button>-->
+        <!--<button type="button" class="btn btn-default pull-right" ng-class="{'active': table.isPageSize(15)}" ng-click="table.pageSize(15)">15</button>-->
+        <div style="float:right; right:0px; width:50%;">
+        <button type="button" class="btn btn-default pull-right" style="width:25.2%" ng-click="table.next()"><i class="fa fa-angle-right"></i></button>
+        <span class="btn btn-default pull-right" style="width: 50%;">{{table.page()}} of {{table.pages()}}</span>
+        <button type="button" class="btn btn-default pull-right" style="width:25.2%" ng-click="table.previous()"><i class="fa fa-angle-left"></i></button>
+      </div>
+         </div>
+    </div>
+           
+  </div>
+ 
+ 
+  
+
+      <div id="tabletop"  style="position:relative;  top:0px; display:inline-block;   ">
+        <div class="col-md-12 col-xs-12"  style="padding:0px; margin:0px; ">
+        <tm1-ui-element-list tm1-calculate-top-level="true" tm1-instance="dev" tm1-dimension="Employee" tm1-subset="All Employees" ng-model="page.employees"></tm1-ui-element-list>
+  
+        <div ng-hide="true">
+          <span ng-repeat="employee in page.employees">
+            <tm1-ui-dbr 
+                tm1-instance="dev" 
+                tm1-cube="Employee" 
+                tm1-elements="Budget,{{page.year}},Year,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Full Time Base Salary" 
+                tm1-data-decimal="0" 
+                ng-model="employee.yearTotal"></tm1-ui-dbr>
+          </span>
+        </div> 
+
+        <table class=" fixed_headers table" ng-init="getHeight()">
+         
+          <thead id="tablethead" ng-class="navisopened ? 'paddingright300':''">
+             
+            <tr class="fixedhead"  id="fixedhead">
+              
+              <th></th>
+              <th style="min-width: 300px !important;  ">Employee</th>
+              <th ng-if="page.employmentPeriod" class="text-right">Start Date</th>
+              <th ng-if="page.employmentPeriod" class="text-right">End Date</th>
+              <th class="cellwidth120 text-right">Pay Method</th>
+              <th class="text-right">Last Year</th>
+              <th class="cellwidth120 text-right">
+                  Year
+              </th>
+              <th ng-if="page.showQ1" ng-repeat="month in q1" class="text-right" >
+                  {{month}}
+              </th>
+              <th ng-if="page.showQ2" ng-repeat="month in q2" class="text-right" >
+                  {{month}}
+              </th>
+              <th ng-if="page.showQ3" ng-repeat="month in q3" class="text-right" >
+                  {{month}}
+              </th>
+              <th ng-if="page.showQ4" ng-repeat="month in q4" class="text-right" >
+                  {{month}}
+              </th>
+            </tr>
+          
+          </thead>
+           <!--<div id="headfirstcol" class="headfirstcol" >Employee</div>-->
+          
+          <tbody id="fixedtable" style="overflow:auto; margin-top:40px;">
+            <div id="mytablecontents" style="height:auto; width:100%; padding:0px; margin:0px;">
+             <tr ng-repeat-start="employee in table.data()">
+              
+              <td style="border-right: 1px solid #CCC;">
+                  <i style="color:red; cursor: pointer;" class="fa fa-times" aria-hidden="true" data-toggle="modal" data-target="#modalDelete" ng-click="employeeDelete(employee.key,employee.alias)"></i>
+              </td>
+              
+              <td style="min-width: 300px; cursor: pointer; text-align:left;">
+                <span class="tm1-ui-indent" ng-repeat="item in employee.indent() track by $index"></span>
+                <i class="fa" ng-class="{'tm1-ui-element-consol-icon': !employee.isLeaf, 'tm1-ui-element-leaf-icon': employee.isLeaf}"></i>
+                <span uib-tooltip="Click to show details" ng-click="employeeDetailsShow(employee.key,employee.alias)" data-toggle="modal" data-target="#modalDetails">{{employee.alias}}</span>
+                <span uib-tooltip="Click to show last year" class="pull-right" ng-click="employee.showLY = !employee.showLY">
+                    <span class="label label-info">LY</span>
+                </span>
+                <span uib-tooltip="Click to see moving employee" class="pull-right" style="margin-right:5px;" ng-click="employeeDetailsShow(employee.key,employee.alias)" data-toggle="modal" data-target="#modalMove">
+                    <span class="label label-primary">Move</span>
+                </span>
+                
+              </td>
+              
+              <td ng-if="page.employmentPeriod" class=" text-right"  >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Start Date"
+                    tm1-date-option="{format:'yyyy-mm-dd'}"
+                    ></tm1-ui-dbr>
+              </td>
+              <td ng-if="page.employmentPeriod" class="text-right"  >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},End Date"
+                    tm1-date-option="{format:'yyyy-mm-dd'}"  
+                    ></tm1-ui-dbr>
+              </td>
+              
+              <td id="cell" class="cellwidth120 text-right" ng-click="positionCell($event)">
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Pay Method"></tm1-ui-dbr>
+              </td>
+              
+              <td class="text-right" style="font-weight: bold;">
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Actual,2015,Year,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Base Salary" 
+                    tm1-data-decimal="0" ></tm1-ui-dbr>
+              </td>
+              
+              <td ng-show="employee.salaryYearEntered > 0 || !employee.salaryFullTimeCalc" class="cellwidth120 text-right" style="font-weight: bold;">
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Enter Full Time Base Salary" 
+                    tm1-data-decimal="0"
+                    ng-model="employee.salaryYearEntered"></tm1-ui-dbr>
+              </td>
+              
+              <td ng-show="employee.salaryYearEntered == 0 && employee.salaryFullTimeCalc > 0" class="text-right" style="width: 150px; font-weight: bold;">
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},Year,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Full Time Base Salary" 
+                    tm1-data-decimal="0"
+                    ng-model="employee.salaryFullTimeCalc"></tm1-ui-dbr>
+              </td>
+                  
+              <td ng-repeat="month in q1" ng-if="page.showQ1" class="text-right" >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},{{employeeMeasure(employee)}}" 
+                    tm1-data-decimal="0" ></tm1-ui-dbr>
+              </td>
+              <td ng-repeat="month in q2" ng-if="page.showQ2" class="text-right" >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},{{employeeMeasure(employee)}}" 
+                    tm1-data-decimal="0" ></tm1-ui-dbr>
+              </td>
+              <td ng-repeat="month in q3" ng-if="page.showQ3" class="text-right">
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},{{employeeMeasure(employee)}}" 
+                    tm1-data-decimal="0" ></tm1-ui-dbr>
+              </td>
+              <td ng-repeat="month in q4" ng-if="page.showQ4" class="text-right" >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Budget,{{page.year}},{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},{{employeeMeasure(employee)}}" 
+                    tm1-data-decimal="0" ></tm1-ui-dbr>
+              </td>
+              
+              
+            </tr>
+            
+            <!-- LAST YEAR ROW -->
+            <tr ng-repeat-end ng-if="employee.showLY">
+              <td>
+                  <span uib-tooltip="Click to hide last year" class="pull-right" style="cursor: pointer;" ng-click="showLastYear(employee.alias)">
+                      <span class="label label-info">LY</span>
+                  </span>
+                </td>
+              <td style="min-width: 250px;" >
+                <span>{{employee.alias}}</span>
+              </td>
+              <td ng-show="page.employmentPeriod"></td>
+              <td ng-show="page.employmentPeriod"></td>
+              <td class="cellwidth150 text-right" style="font-weight: bold; ">
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Actual,2015,Year,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Pay Method" 
+                    tm1-data-decimal="0"
+                    tm1-read-only="true"></tm1-ui-dbr>
+              </td>
+              
+              <td></td>
+              
+              <td class="text-right" style="font-weight: bold;">
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Actual,2015,Year,Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Base Salary" 
+                    tm1-data-decimal="0" ></tm1-ui-dbr>
+              </td>
+              
+              <td ng-if="page.showQ1" ng-repeat="month in q1" class="text-right" >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Actual,2015,{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Base Salary" 
+                    tm1-data-decimal="0"
+                    tm1-read-only="true"></tm1-ui-dbr>
+              </td>
+              <td ng-if="page.showQ2" ng-repeat="month in q2" class="text-right" >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Actual,2015,{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Base Salary" 
+                    tm1-data-decimal="0"
+                    tm1-read-only="true"></tm1-ui-dbr>
+              </td>
+              <td ng-if="page.showQ3" ng-repeat="month in q3" class="text-right" >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Actual,2015,{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Base Salary" 
+                    tm1-data-decimal="0"
+                    tm1-read-only="true"></tm1-ui-dbr>
+              </td>
+              <td ng-if="page.showQ4" ng-repeat="month in q4" class="text-right" >
+                <tm1-ui-dbr 
+                    tm1-instance="dev" 
+                    tm1-cube="Employee" 
+                    tm1-elements="Actual,2015,{{month}},Local,{{page.title.region}},{{page.title.department}},{{employee.key}},Base Salary" 
+                    tm1-data-decimal="0"
+                    tm1-read-only="true"></tm1-ui-dbr>
+              </td>
+              
+              
+            </tr>
+            </div>
+          </tbody>
+          <!-- <table id="firstcolumntable" class="firstcolumntable" style=" margin-top:0px; position: absolute; left: 0px; width: 150px; top:0px;  z-index:999; overflow:hidden;  color:#757f84;"  >
+            <tbody id="firstcolumnbody" style="margin-top:0px;">
+              <div style="height:auto; width:100%; padding:0px; margin:0px;">
+              <tr ng-repeat="rowitem in myData ">
+                <td class="firstcol" style=" max-width:none; position:absolute; left:0; ">{{rowitem.name}}</td>
+                
+              </tr>
+              
+              </div>
+            </tbody>
+           </table>-->
+        </table>
+         
+     
+  	</div>
+  </div>
+</section>
+   
+  
+  <!-- <div>
+        <div class="btn-group" role="group" >
+          <button type="button" class="btn btn-default" ng-click="table.previous()"><i class="fa fa-angle-left"></i></button>
+          <span class="btn btn-default" style="width: 70px;">{{table.page()}} of {{table.pages()}}</span>
+          <button type="button" class="btn btn-default" ng-click="table.next()"><i class="fa fa-angle-right"></i></button>
+        </div>
+        <div class="btn-group pull-right" role="group" >
+          <button type="button" class="btn btn-default" ng-class="{'active': table.isPageSize(10)}" ng-click="table.pageSize(10)">10</button>
+          <button type="button" class="btn btn-default" ng-class="{'active': table.isPageSize(15)}" ng-click="table.pageSize(15)">15</button>
+          <button type="button" class="btn btn-default" ng-class="{'active': table.isPageSize(20)}" ng-click="table.pageSize(20)">20</button>
+          <button type="button" class="btn btn-default" ng-class="{'active': table.isPageSize(30)}" ng-click="table.pageSize(30)">30</button>
+          <button type="button" class="btn btn-default" ng-class="{'active': table.isPageSize(50)}" ng-click="table.pageSize(50)">50</button>
+          <button type="button" class="btn btn-default" ng-class="{'active': table.isPageSize(100)}" ng-click="table.pageSize(100)">100</button>
+        </div>
+      </div>-->
+  
+   
+    
+    
+
+     
+   
+  <!-- Modal (delete employee)-->
+  <div class="modal fade" id="modalDelete" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3>Delete Employee</h3>
+        </div>
+        <div class="modal-body">
+          <p>Do you want to delete <b>{{employeeToDelete.name}}</b>?</p>
+        </div>
+        <div class="modal-footer">
+          <tm1-ui-process tm1-instance="dev" tm1-name="Bedrock.Dim.Element.Delete" tm1-ui-button-class="btn-danger" tm1-parameters='pDimension=Employee&pElement={{employeeToDelete.id}}&pDebug=0' tm1-display-name="Delete" tm1-message-error="Didn't work:(" tm1-message-success="Deleted" class="deleteButton col-md-6" tm1-refresh-page="true"></tm1-ui-process>
+          <div class="col-md-6">
+            <button class="btn btn-block btn-default col-md-6" data-dismiss="modal" style="height:44px;">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal (delete employee)-->
+ 
+ 
+ <!-- Modal (add employee)-->
+  <div class="modal fade" id="modalAdd" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3>Add New Employee</h3>
+        </div>
+        <div class="modal-body">
+          <fieldset class="form-group">
+            <input class="form-control" type="text" placeholder="ID" ng-model="page.newEmployee.id">
+          </fieldset>
+          <fieldset class="form-group">
+            <input class="form-control" type="text" placeholder="Full Name" ng-model="page.newEmployee.name">
+          </fieldset>
+          <fieldset class="form-group">
+            <input class="form-control" type="text" placeholder="Annual Salary" ng-model="page.newEmployee.salary">
+          </fieldset>
+          <fieldset class="form-group">
+            <select class="form-control" ng-init="page.newEmployee.method='Monthly'" ng-model="page.newEmployee.method">
+                <option>Monthly</option>
+                <option>Weekly</option>
+            </select>
+          </fieldset>
+          <fieldset>
+              <label>
+                  Start Date
+              </label>
+              <tm1-ui-dbr tm1-instance="dev" tm1-cube="}ElementAttributes_Employee" tm1-elements="All Employees, StartDate" tm1-date-option="{format:'yyyy-mm-dd'}" ng-model="page.newEmployee.startDate"></tm1-ui-dbr>
+          </fieldset>
+        </div>
+        <div class="modal-footer">
+          
+          <tm1-ui-process tm1-instance="dev" tm1-name="Dim.Employee.AddNewEmployee" tm1-ui-button-class="btn btn-success" tm1-parameters="pID={{page.newEmployee.id}}&pName={{page.newEmployee.name}}&pDept={{page.title.department}}&pRegion={{page.title.region}}&pMethod={{page.newEmployee.method}}&pSalary={{page.newEmployee.salary}}&pStartDate={{page.newEmployee.startDate}}" tm1-disabled="!(page.newEmployee.id.length && page.newEmployee.name.length && page.newEmployee.salary.length)" tm1-display-name="Add" tm1-message-error="Didn't work:(" tm1-message-success="Added" tm1-refresh-page="true" class="col-md-6"></tm1-ui-process>
+          <div class="col-md-6">
+            <button class="btn btn-block btn-default" data-dismiss="modal" style="height:44px;">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal (add employee)-->
+
+<!-- Modal (employee move)-->
+  <div class="modal fade" id="modalMove" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3>Move</h3>      
+        </div>
+        <div class="modal-body">
+            <table class="table table-striped">
+              <tr>
+                <th>Name:</th>
+                <td style="width: 100%;">{{employeeDetails.name}}</td>
+              </tr>
+              <tr>
+                <th>Id:</th>
+                <td>{{employeeDetails.id}}</td>
+              </tr>
+              <tr>
+                <th>Region:</th>
+                <td><tm1-ui-dbra
+                       tm1-instance="dev"
+                       tm1-dimension="Employee"
+                       tm1-element="{{employeeDetails.id}}"
+                       tm1-attribute="Region"
+                       tm1-read-only="true">
+                </tm1-ui-dbra></td>
+              </tr>
+              <tr>
+                <th>Department:</th>
+                <td><tm1-ui-dbra
+                       tm1-instance="dev"
+                       tm1-dimension="Employee"
+                       tm1-element="{{employeeDetails.id}}"
+                       tm1-attribute="Department Name"
+                       tm1-read-only="true">
+                </tm1-ui-dbra></td>
+              </tr>
+            </table>
+         <h3>Move to </h3>
+         <div class="row">
+             <tm1-ui-subnm tm1-instance="dev" tm1-dimension="Region" tm1-attribute="Description" tm1-default-element="3" tm1-select-only="true" ng-model="employeeDetails.region" tm1-subset="All Countries" class="col-md-6"></tm1-ui-subnm>
+             <tm1-ui-subnm tm1-instance="dev" tm1-dimension="Department" tm1-attribute="Description" tm1-default-element="3" tm1-select-only="true" ng-model="employeeDetails.dept" tm1-subset="DepartmentList" class="col-md-6"></tm1-ui-subnm>
+         </div>
+        </div>
+        <div class="modal-footer">
+          <tm1-ui-process tm1-instance="dev" tm1-name="Cube.Employee.UpdateEmployee" tm1-ui-button-class="btn-success" tm1-parameters='pID={{employeeDetails.id}}&pRegion={{employeeDetails.region}}&pDept={{employeeDetails.dept}}' tm1-display-name="Move" tm1-message-error="Didn't work:(" tm1-message-success="Moved" class="col-md-6" tm1-refresh-page="true"></tm1-ui-process>
+          <div class="col-md-6">
+            <button class="btn btn-block btn-default col-md-6" data-dismiss="modal" style="height:44px;">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<!-- Modal (employee move)-->   
+
+<!-- Modal (employee details)-->
+  <div class="modal fade" id="modalDetails" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3>{{employeeDetails.name}}</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <tm1-ui-dbra
+                               tm1-instance="dev"
+                               tm1-dimension="Employee"
+                               tm1-element="{{employeeDetails.id}}"
+                               tm1-attribute="Department Name"
+                               tm1-read-only="true"
+                               ng-model="empoyeeDetails.dept">
+                    </tm1-ui-dbra>, 
+                    <tm1-ui-dbra
+                               tm1-instance="dev"
+                               tm1-dimension="Employee"
+                               tm1-element="{{employeeDetails.id}}"
+                               tm1-attribute="Region"
+                               tm1-read-only="true"
+                               ng-model="empoyeeDetails.region">
+                    </tm1-ui-dbra><br>
+                    <div class="row">
+                        <div class="col-md-6">
+                            From 
+                            <tm1-ui-dbr 
+                              tm1-instance="dev" 
+                              tm1-cube="Employee" 
+                              tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},Start Date" 
+                              tm1-date-option="{format:'yyyy-mm-dd'}"
+                              ></tm1-ui-dbr>
+                        </div>
+                        <div class="col-md-6">
+                            To <tm1-ui-dbr 
+                              tm1-instance="dev" 
+                              tm1-cube="Employee" 
+                              tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},End Date" 
+                              tm1-date-option="{format:'yyyy-mm-dd'}"
+                              ></tm1-ui-dbr>
+                        </div>
+                    </div>
+                    
+                </div>
+                <table class="pull-right" style="margin-right:10px; border-spacing:0 5px;">
+                    <tr>
+                      <td style="margin-right:10px; padding-bottom:5px;"><label>Salary (Year)</label></td>
+                      <td>
+                      <tm1-ui-dbr 
+                      tm1-instance="dev" 
+                      tm1-cube="Employee" 
+                      tm1-elements="Budget,{{page.year}},{{employeeDetails.salaryYear_enter1==(-1)?'Year':'Year_Enter'}},Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},{{employeeDetails.salaryYear_enter1==(-1)?'Full Time Base Salary':'Enter Full Time Base Salary'}}" 
+                      tm1-data-decimal="0"
+                      ></tm1-ui-dbr></td>
+                    </tr>
+                    
+                  <tr>
+                <td style="padding-right:10px; "><label>Pay Method</label></td>
+                
+                    <td><tm1-ui-dbr 
+                      tm1-instance="dev" 
+                      tm1-cube="Employee" 
+                      tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},Pay Method" 
+                      tm1-data-decimal="0" ></tm1-ui-dbr></td>
+                      </tr>
+                </table>                
+                <tm1-ui-dbr 
+                  ng-hide="true" 
+                  tm1-instance="dev" 
+                  tm1-cube="Employee" 
+                  tm1-elements="Budget,{{page.year}},Year_Enter,Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},Enter Full Time Base Salary" 
+                  tm1-data-decimal="0"
+                  ng-model="employeeDetails.salaryYear_enter1"
+                  ></tm1-ui-dbr>
+                <tm1-ui-dbr
+                  ng-hide="true"                    
+                  tm1-instance="dev" 
+                  tm1-cube="Employee" 
+                  tm1-elements="Budget,{{page.year}},Year,Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},Enter Full Time Base Salary" 
+                  tm1-data-decimal="0"
+                  ng-model="employeeDetails.salaryYearEnterTotal"
+                  ></tm1-ui-dbr>          
+              
+            </div>
+        </div>
+        <div class="modal-body">
+        
+           <table class="table">
+               <tr>
+                   <th></th>
+                   <th ng-repeat="month in page.months" ng-if="$index<6">{{month}}</th>
+               </tr>
+               <tr>
+                   <td><label>Salary</label></td>
+
+                   <td ng-repeat="month in page.months" ng-if="$index<6">
+                      <tm1-ui-dbr 
+                      tm1-instance="dev" 
+                      tm1-cube="Employee" 
+                      tm1-elements="Budget,{{page.year}},{{month}},Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},{{(employeeDetails.salaryYear_enter1==-1 && employeeDetails.salaryYearEnterTotal>0) || (employeeDetails.salaryYear_enter1==0 && employeeDetails.salaryYearEnterTotal==0)?'Enter Full Time Base Salary':'Base Salary'}}" 
+                      tm1-data-decimal="0"></tm1-ui-dbr>
+                   </td>
+               </tr>
+
+               <tr>
+                   <th></th>
+                   <th ng-repeat="month in page.months" ng-if="$index>=6">{{month}}</th></tr>
+                   <tr>
+                   <td><label>Salary</label></td>
+
+                   <td ng-repeat="month in page.months" ng-if="$index>=6">
+                      <tm1-ui-dbr 
+                      tm1-instance="dev" 
+                      tm1-cube="Employee" 
+                      tm1-elements="Budget,{{page.year}},{{month}},Local,{{empoyeeDetails.region}},{{empoyeeDetails.dept}},{{employeeDetails.id}},{{(employeeDetails.salaryYear_enter1==-1 && employeeDetails.salaryYearEnterTotal>0) || (employeeDetails.salaryYear_enter1==0 && employeeDetails.salaryYearEnterTotal==0)?'Enter Full Time Base Salary':'Base Salary'}}" 
+                      tm1-data-decimal="0"></tm1-ui-dbr>
+                   </td>
+               </tr>
+
+           </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<!-- Modal (employee details)-->   
+</div>

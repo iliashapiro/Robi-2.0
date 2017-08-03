@@ -1,0 +1,26 @@
+[
+  {
+    "label": "Report Template",
+    "icon_class": "fa-flash",
+    "data": {
+      "page": "report-template"
+    },
+    "expanded": false
+  },
+  {
+    "label": "Simple Page Template",
+    "icon_class": "fa-file-text-o",
+    "data": {
+      "page": "simple-page"
+    },
+    "expanded": false
+  },
+  {
+    "label": "Dashboard Template",
+    "icon_class": "fa-pencil",
+    "data": {
+      "page": "dashboard-template"
+    },
+    "expanded": false
+  }
+]
